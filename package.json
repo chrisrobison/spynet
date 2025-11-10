@@ -1,0 +1,67 @@
+{
+  "name": "spynet-ar",
+  "version": "0.1.0",
+  "description": "A real-world espionage game powered by AR, AI, and geolocation",
+  "private": true,
+  "workspaces": [
+    "services/*",
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "pnpm run --parallel dev",
+    "dev:stack": "docker compose up -d",
+    "dev:stack:logs": "docker compose logs -f",
+    "dev:stack:down": "docker compose down",
+    "dev:stack:clean": "docker compose down -v",
+    "dev:api": "pnpm --filter @spynet/api dev",
+    "dev:missions": "pnpm --filter @spynet/missions dev",
+    "dev:mobile": "pnpm --filter @spynet/mobile dev",
+    "dev:web": "pnpm --filter @spynet/web dev",
+    "build": "pnpm run --recursive build",
+    "test": "pnpm run --recursive test",
+    "test:integration": "pnpm run --recursive test:integration",
+    "test:e2e": "pnpm run --recursive test:e2e",
+    "lint": "pnpm run --recursive lint",
+    "lint:fix": "pnpm run --recursive lint:fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "typecheck": "pnpm run --recursive typecheck",
+    "clean": "pnpm run --recursive clean && rm -rf node_modules",
+    "db:setup": "node scripts/db/setup.js",
+    "db:migrate": "node scripts/db/migrate.js",
+    "db:migrate:create": "node scripts/db/create-migration.js",
+    "db:migrate:rollback": "node scripts/db/rollback.js",
+    "db:seed": "node scripts/db/seed.js",
+    "seed:sf": "node scripts/db/seed-sf.js",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "ar",
+    "augmented-reality",
+    "game",
+    "spy",
+    "espionage",
+    "location-based",
+    "ai",
+    "llm"
+  ],
+  "author": "SpyNet Team",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.2.5",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.2"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.0.0"
+}

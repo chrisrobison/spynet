@@ -1,0 +1,114 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: spynet-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-spynet}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-spynet}
+      POSTGRES_DB: ${POSTGRES_DB:-spynet}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/db/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-spynet}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - spynet
+
+  redis:
+    image: redis:7-alpine
+    container_name: spynet-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - spynet
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:23-alpine
+    container_name: spynet-clickhouse
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    environment:
+      CLICKHOUSE_DB: spynet
+      CLICKHOUSE_USER: spynet
+      CLICKHOUSE_PASSWORD: spynet
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./scripts/db/clickhouse-init.sql:/docker-entrypoint-initdb.d/init.sql
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - spynet
+
+  minio:
+    image: minio/minio:latest
+    container_name: spynet-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - spynet
+
+  # Create default bucket for MinIO
+  minio-init:
+    image: minio/mc:latest
+    container_name: spynet-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set myminio http://minio:9000 ${MINIO_ACCESS_KEY:-minioadmin} ${MINIO_SECRET_KEY:-minioadmin};
+      mc mb myminio/spynet --ignore-existing;
+      mc anonymous set download myminio/spynet;
+      exit 0;
+      "
+    networks:
+      - spynet
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  clickhouse_data:
+    driver: local
+  minio_data:
+    driver: local
+
+networks:
+  spynet:
+    driver: bridge
