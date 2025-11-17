@@ -20,7 +20,9 @@ The SpyNet Intelligence Network (SIN) is an AI-driven orchestration engine that 
 │  └──────────────┘  └──────────────┘  └──────────────┘ │
 │                                                          │
 │  ┌──────────────────────────────────────────────────┐  │
-│  │         LLM (GPT-4 / Claude / Local)             │  │
+│  │         Multi-Provider LLM Manager               │  │
+│  │     (OpenAI / Claude / Ollama / Custom)          │  │
+│  │          Dynamic Switching & Fallback            │  │
 │  └──────────────────────────────────────────────────┘  │
 │                                                          │
 │  ┌──────────────────────────────────────────────────┐  │
@@ -35,6 +37,85 @@ The SpyNet Intelligence Network (SIN) is an AI-driven orchestration engine that 
     │  Game API │        │ Postgres  │       │   Redis   │
     └───────────┘        └───────────┘       └───────────┘
 ```
+
+### LLM Provider Configuration
+
+SpyNet supports multiple LLM providers with dynamic switching capabilities:
+
+#### Supported Providers
+
+1. **OpenAI (GPT-4, GPT-3.5)**
+   - Production-grade performance
+   - Best for complex reasoning and mission generation
+   - Requires API key and internet connection
+
+2. **Anthropic (Claude 3.5)**
+   - Excellent for narrative generation
+   - Strong safety guardrails
+   - Requires API key and internet connection
+
+3. **Local Models (Ollama, LM Studio)**
+   - No API costs
+   - Works offline
+   - Privacy-preserving
+   - Best for development and testing
+
+4. **Custom Endpoints**
+   - Any OpenAI-compatible API
+   - Examples: Together AI, Groq, Perplexity
+   - Flexible deployment options
+
+#### Configuration
+
+Configure providers via environment variables (see `.env.example`):
+
+```env
+# Active provider
+LLM_ACTIVE_PROVIDER=openai
+
+# Enable multiple providers
+LLM_OPENAI_ENABLED=true
+LLM_LOCAL_ENABLED=true
+LLM_ANTHROPIC_ENABLED=false
+LLM_CUSTOM_ENABLED=false
+
+# OpenAI Configuration
+LLM_OPENAI_API_KEY=sk-...
+LLM_OPENAI_BASE_URL=https://api.openai.com/v1
+LLM_OPENAI_MODEL=gpt-4
+
+# Local Configuration (Ollama)
+LLM_LOCAL_API_KEY=not-required
+LLM_LOCAL_BASE_URL=http://localhost:11434/v1
+LLM_LOCAL_MODEL=llama3.1:70b
+```
+
+#### Usage in Orchestrator
+
+```typescript
+import { LLMManager } from '@spynet/llm-config';
+
+// Initialize with environment config
+const llm = new LLMManager();
+
+// Use active provider
+const response = await llm.chat([...]);
+
+// Switch providers dynamically
+llm.switchProvider('local'); // Use local model
+
+// Automatic fallback
+const response = await llm.chatWithFallback([...]); // Try all providers
+
+// Route by task complexity
+if (complexTask) {
+  llm.switchProvider('openai'); // Use powerful model
+} else {
+  llm.switchProvider('local'); // Use local model
+}
+```
+
+For detailed configuration, see `packages/llm-config/README.md`.
 
 ## Core Systems
 

@@ -1,0 +1,4 @@
+Options +Indexes
+AddCharset utf-8 .md .markdown .txt .js .php .html
+
+

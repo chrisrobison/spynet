@@ -1,0 +1,28 @@
+{
+  "name": "@spynet/llm-config",
+  "version": "0.1.0",
+  "description": "Multi-provider LLM configuration management for SpyNet",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "llm",
+    "openai",
+    "anthropic",
+    "ollama",
+    "configuration"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  }
+}

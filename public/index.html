@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f172a">
+
+  <title>SpyNet AR - Urban Espionage Game</title>
+  <meta name="description" content="Join the shadow war. Choose your faction. Complete missions. Control the city.">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Icons -->
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/assets/css/theme.css">
+  <link rel="stylesheet" href="/assets/css/app.css">
+
+  <!-- Leaflet for maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Preload critical resources -->
+  <link rel="preconnect" href="http://localhost:3000">
+  <link rel="dns-prefetch" href="http://localhost:3000">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="loading-screen">
+    <div class="spinner"></div>
+    <p>Initializing secure connection...</p>
+  </div>
+
+  <!-- Main Game Container -->
+  <spynet-game id="game"></spynet-game>
+
+  <!-- PAN Bus (auto-created by LARC) -->
+  <!-- Inspector for development (remove in production) -->
+  <pan-inspector id="inspector" style="position: fixed; bottom: 0; left: 0; right: 0; height: 300px; z-index: 9999; display: none;"></pan-inspector>
+
+  <!-- Load LARC Framework -->
+  <script type="module" src="/larc/src/pan.js"></script>
+
+  <!-- Bootstrap App -->
+  <script type="module">
+    // Wait for PAN bus to be ready
+    document.addEventListener('pan:sys.ready', async () => {
+      console.log('🎯 SpyNet AR - Initializing...');
+
+      // Hide loading screen after components load
+      setTimeout(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+      }, 1000);
+
+      // Enable inspector with Ctrl+Shift+I
+      document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+          const inspector = document.getElementById('inspector');
+          inspector.style.display = inspector.style.display === 'none' ? 'block' : 'none';
+        }
+      });
+    });
+
+    // Register service worker for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('✅ Service Worker registered'))
+          .catch(err => console.error('❌ Service Worker registration failed:', err));
+      });
+    }
+
+    // Handle install prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Show install button if component exists
+      document.querySelector('spynet-install-prompt')?.show();
+    });
+  </script>
+
+  <!-- Development helpers -->
+  <script>
+    // Expose debug helpers globally
+    window.SpyNet = {
+      version: '1.0.0',
+      env: 'development',
+      toggleInspector: () => {
+        const inspector = document.getElementById('inspector');
+        inspector.style.display = inspector.style.display === 'none' ? 'block' : 'none';
+      }
+    };
+
+    console.log(`
+╔═══════════════════════════════════════════╗
+║     🕵️  SpyNet AR - v1.0.0              ║
+║     Urban Espionage Gameplay              ║
+╠═══════════════════════════════════════════╣
+║  Debug: Ctrl+Shift+I - Toggle Inspector  ║
+║  Help:  window.SpyNet                    ║
+╚═══════════════════════════════════════════╝
+    `);
+  </script>
+</body>
+</html>

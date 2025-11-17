@@ -1,0 +1,31 @@
+{
+  "name": "spynet-api",
+  "version": "1.0.0",
+  "description": "SpyNet AR - Dynamic REST API",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "start": "node index.js",
+    "db:migrate": "node scripts/migrate.js",
+    "db:seed": "psql $DATABASE_URL -f ../../scripts/db/schema.sql"
+  },
+  "dependencies": {
+    "fastify": "^4.25.0",
+    "@fastify/cors": "^8.5.0",
+    "@fastify/jwt": "^7.2.4",
+    "@fastify/rate-limit": "^9.1.0",
+    "@fastify/static": "^6.12.0",
+    "pg": "^8.11.3",
+    "redis": "^4.6.12",
+    "dotenv": "^16.3.1",
+    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^5.1.1",
+    "qrcode": "^1.5.3",
+    "nanoid": "^5.0.4",
+    "@anthropic-ai/sdk": "^0.27.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6"
+  }
+}

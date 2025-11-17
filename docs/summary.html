@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>PROJECT_SUMMARY</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://cdr2.com/pandoc.css" />
+</head>
+<body>
+<h1 id="spynet-ar---project-summary">SpyNet AR - Project Summary</h1>
+<h2 id="project-overview">Project Overview</h2>
+<p>SpyNet AR is an ambitious location-based augmented reality espionage
+game that merges the digital and physical worlds. Players become secret
+agents, completing missions, scanning QR codes, spotting other
+operatives, and battling for control of real-world territory through
+their mobile devices.</p>
+<h2 id="core-innovation">Core Innovation</h2>
+<p>The game’s primary innovation is its <strong>AI-orchestrated mission
+system</strong>. A Large Language Model (LLM) acts as the “SpyNet
+Intelligence Network,” dynamically generating personalized missions,
+crafting emergent narratives, and adapting gameplay based on player
+behavior and real-world events. This creates a living, breathing spy
+thriller where every player’s actions influence the global story.</p>
+<h2 id="key-features">Key Features</h2>
+<h3 id="hybrid-physical-digital-gameplay">1. Hybrid Physical-Digital
+Gameplay</h3>
+<ul>
+<li><strong>AR Exploration</strong>: Discover virtual items overlaid on
+real environments</li>
+<li><strong>QR Code Missions</strong>: Scan codes hidden at real-world
+locations</li>
+<li><strong>Proximity Detection</strong>: Use Bluetooth to detect nearby
+players</li>
+<li><strong>Territory Control</strong>: Capture and defend geographic
+zones</li>
+</ul>
+<h3 id="ai-driven-dynamic-content">2. AI-Driven Dynamic Content</h3>
+<ul>
+<li><strong>Personalized Missions</strong>: LLM generates missions
+tailored to player skill and location</li>
+<li><strong>Emergent Narrative</strong>: Stories evolve based on
+collective player actions</li>
+<li><strong>Adaptive Difficulty</strong>: AI adjusts challenges based on
+performance</li>
+<li><strong>Real-time Events</strong>: Dynamic world events respond to
+faction wars</li>
+</ul>
+<h3 id="faction-warfare">3. Faction Warfare</h3>
+<ul>
+<li><strong>Three Rival Agencies</strong>:
+<ul>
+<li><strong>The Obsidian Order</strong> - Deception and psychological
+warfare</li>
+<li><strong>The Aurora Syndicate</strong> - Tech anarchists and
+hackers</li>
+<li><strong>The Citadel Directorate</strong> - Military precision and
+control</li>
+</ul></li>
+<li><strong>Double Agent System</strong>: Players can switch sides or
+operate as moles</li>
+<li><strong>Territory Control</strong>: Factions battle for control of
+city zones</li>
+<li><strong>Strategic Objectives</strong>: Long-term faction goals and
+seasonal campaigns</li>
+</ul>
+<h3 id="inclusive-gameplay">4. Inclusive Gameplay</h3>
+<ul>
+<li><strong>Field Operations</strong>: Physical exploration for mobile
+players</li>
+<li><strong>Remote Missions</strong>: Cipher puzzles and intel analysis
+from home</li>
+<li><strong>Command Roles</strong>: Strategic coordination for
+high-ranking agents</li>
+<li><strong>Hybrid Operations</strong>: Coordination between field and
+remote agents</li>
+</ul>
+<h2 id="technical-architecture">Technical Architecture</h2>
+<h3 id="frontend">Frontend</h3>
+<ul>
+<li><strong>Mobile</strong>: React Native + Expo (iOS/Android)</li>
+<li><strong>Web</strong>: Next.js for companion app and remote
+missions</li>
+<li><strong>AR</strong>: ARKit/ARCore with WebXR fallback</li>
+<li><strong>Maps</strong>: Mapbox for location services</li>
+</ul>
+<h3 id="backend">Backend</h3>
+<ul>
+<li><strong>API</strong>: NestJS microservices (Node.js 22 +
+TypeScript)</li>
+<li><strong>AI Orchestrator</strong>: Python FastAPI with LLM
+integration</li>
+<li><strong>Real-time</strong>: WebSocket with Socket.IO</li>
+<li><strong>Workers</strong>: BullMQ + Temporal for async
+operations</li>
+</ul>
+<h3 id="data-layer">Data Layer</h3>
+<ul>
+<li><strong>PostgreSQL 16</strong>: Primary database with PostGIS for
+geospatial</li>
+<li><strong>Redis 7</strong>: Presence tracking, rate limiting,
+caching</li>
+<li><strong>ClickHouse</strong>: Analytics and event streaming</li>
+<li><strong>MinIO</strong>: S3-compatible object storage</li>
+</ul>
+<h3 id="infrastructure">Infrastructure</h3>
+<ul>
+<li><strong>Kubernetes</strong>: GKE Autopilot for container
+orchestration</li>
+<li><strong>Cloudflare</strong>: CDN, WAF, and edge computing</li>
+<li><strong>Terraform</strong>: Infrastructure as Code</li>
+<li><strong>GitHub Actions</strong>: CI/CD pipeline</li>
+</ul>
+<h2 id="game-mechanics">Game Mechanics</h2>
+<h3 id="mission-types">Mission Types</h3>
+<p><strong>Field Missions</strong> (require physical presence): - QR
+code scanning - Territory surveillance - Agent encounters - Dead
+drops</p>
+<p><strong>Remote Missions</strong> (accessible from anywhere): - Cipher
+decryption - Intelligence analysis - Social engineering - Strategic
+planning</p>
+<p><strong>Hybrid Missions</strong> (coordination required): -
+Triangulation operations - Multi-agent raids - Intelligence relay</p>
+<h3 id="progression-system">Progression System</h3>
+<ol type="1">
+<li><strong>Ranks</strong>: Rookie Operative → Field Agent → Handler →
+Ghost Agent</li>
+<li><strong>Experience</strong>: Earned through missions and
+interactions</li>
+<li><strong>Reputation</strong>: Community-driven rating system</li>
+<li><strong>Unlocks</strong>: Advanced missions, QR deployment, faction
+recruitment</li>
+</ol>
+<h3 id="control-zones">Control Zones</h3>
+<ul>
+<li><strong>Micro Zones</strong>: Individual landmarks (parks,
+buildings)</li>
+<li><strong>Meso Zones</strong>: Neighborhoods (Mission District,
+SoMa)</li>
+<li><strong>Macro Zones</strong>: City sectors (Downtown SF, East
+Bay)</li>
+</ul>
+<p>Control determined by: - Active player presence - Mission completions
+- QR scans - Agent encounters - Remote support operations</p>
+<h2 id="ai-orchestration">AI Orchestration</h2>
+<h3 id="llm-as-game-master">LLM as Game Master</h3>
+<p>The AI system uses GPT-4 (or equivalent) with tool-calling
+capabilities to:</p>
+<ol type="1">
+<li><strong>Generate Missions</strong>: Create contextual missions based
+on player profile and location</li>
+<li><strong>Craft Narratives</strong>: Write immersive briefings and
+story content</li>
+<li><strong>Manage Factions</strong>: Orchestrate faction wars and
+strategic operations</li>
+<li><strong>Adapt Difficulty</strong>: Tune challenges to maintain
+engagement</li>
+<li><strong>Create Events</strong>: Generate city-wide events and global
+operations</li>
+</ol>
+<h3 id="rag-knowledge-base">RAG Knowledge Base</h3>
+<p>Game design documents are embedded in pgvector, allowing the AI to: -
+Stay consistent with game lore - Generate lore-appropriate content -
+Reference established mechanics - Maintain narrative continuity</p>
+<h3 id="safety-guardrails">Safety &amp; Guardrails</h3>
+<ul>
+<li>No missions on private property</li>
+<li>Blacklisted safety zones (schools, hospitals)</li>
+<li>Time-based restrictions (curfews)</li>
+<li>Content policy enforcement</li>
+<li>Anti-cheating validation</li>
+</ul>
+<h2 id="development-roadmap">Development Roadmap</h2>
+<h3 id="milestone-a-4-6-weeks---core-systems">Milestone A (4-6 weeks) -
+Core Systems</h3>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+Player authentication and profiles</li>
+<li><input type="checkbox" disabled="" />
+QR code scanning and validation</li>
+<li><input type="checkbox" disabled="" />
+Basic mission system</li>
+<li><input type="checkbox" disabled="" />
+BLE proximity detection</li>
+<li><input type="checkbox" disabled="" />
+Zone definitions and mapping</li>
+<li><input type="checkbox" disabled="" />
+WebAR overlay prototype</li>
+</ul>
+<h3 id="milestone-b-6-10-weeks---faction-wars">Milestone B (6-10 weeks)
+- Faction Wars</h3>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+Control zone mechanics</li>
+<li><input type="checkbox" disabled="" />
+Faction recruitment system</li>
+<li><input type="checkbox" disabled="" />
+LLM mission director integration</li>
+<li><input type="checkbox" disabled="" />
+Real-time zone updates via WebSocket</li>
+<li><input type="checkbox" disabled="" />
+Anti-cheat v1 (location verification)</li>
+<li><input type="checkbox" disabled="" />
+Analytics dashboards</li>
+</ul>
+<h3 id="milestone-c-10-14-weeks---launch-prep">Milestone C (10-14 weeks)
+- Launch Prep</h3>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+Double-agent mechanics</li>
+<li><input type="checkbox" disabled="" />
+City-wide faction events</li>
+<li><input type="checkbox" disabled="" />
+Narrative broadcast system</li>
+<li><input type="checkbox" disabled="" />
+iOS/Android app store release</li>
+<li><input type="checkbox" disabled="" />
+San Francisco pilot launch</li>
+<li><input type="checkbox" disabled="" />
+Venue partner program</li>
+</ul>
+<h3 id="post-launch">Post-Launch</h3>
+<ul>
+<li>Multi-city expansion (Oakland, Berkeley, San Jose)</li>
+<li>Advanced AI features (voice missions, image analysis)</li>
+<li>Monetization (cosmetics, agent kits, season pass)</li>
+<li>Community content creation tools</li>
+</ul>
+<h2 id="business-model">Business Model</h2>
+<h3 id="free-to-play-core">Free-to-Play Core</h3>
+<p>All essential gameplay is free:</p>
+<ul>
+<li>Mission participation</li>
+<li>Faction membership</li>
+<li>Territory control</li>
+<li>Basic progression</li>
+</ul>
+<h3 id="premium-offerings">Premium Offerings</h3>
+<ul>
+<li><strong>Cosmetics</strong>: Scanner skins, avatar customization</li>
+<li><strong>Agent Kits</strong>: Physical QR printer bundles
+($49-99)</li>
+<li><strong>Season Pass</strong>: Exclusive missions and storylines
+($9.99/season)</li>
+<li><strong>Venue Partnerships</strong>: Sponsored missions at
+bars/venues</li>
+</ul>
+<h3 id="partnerships">Partnerships</h3>
+<ul>
+<li><strong>Local Businesses</strong>: QR placement agreements</li>
+<li><strong>Tourism Boards</strong>: Historical mission content</li>
+<li><strong>Tech Companies</strong>: AR hardware partnerships</li>
+</ul>
+<h2 id="target-launch">Target Launch</h2>
+<ul>
+<li><strong>Location</strong>: San Francisco, CA</li>
+<li><strong>Timeline</strong>: Q3 2025 (Milestone C completion)</li>
+<li><strong>Initial Scale</strong>: 100-500 active players</li>
+<li><strong>Venue Partners</strong>: 3-5 bars/cafes/tourist spots</li>
+</ul>
+<h2 id="success-metrics">Success Metrics</h2>
+<h3 id="engagement">Engagement</h3>
+<ul>
+<li>Daily Active Users (DAU)</li>
+<li>Session length</li>
+<li>Missions completed per player</li>
+<li>Retention (D1, D7, D30)</li>
+</ul>
+<h3 id="social">Social</h3>
+<ul>
+<li>Agent encounters per day</li>
+<li>Faction participation rate</li>
+<li>Drop discovery rate</li>
+<li>Community QR deployments</li>
+</ul>
+<h3 id="revenue">Revenue</h3>
+<ul>
+<li>Conversion rate to paid features</li>
+<li>Average revenue per user (ARPU)</li>
+<li>Agent kit sales</li>
+<li>Season pass subscriptions</li>
+</ul>
+<h2 id="competitive-landscape">Competitive Landscape</h2>
+<h3 id="inspiration">Inspiration</h3>
+<ul>
+<li><strong>Pokémon GO</strong>: Location-based AR gameplay</li>
+<li><strong>Ingress</strong>: Faction-based territory control</li>
+<li><strong>Geocaching</strong>: Hidden real-world objectives</li>
+<li><strong>ARGs</strong>: Immersive narrative experiences</li>
+</ul>
+<h3 id="differentiation">Differentiation</h3>
+<ol type="1">
+<li><strong>AI-Generated Content</strong>: Dynamic missions vs static
+spawns</li>
+<li><strong>Dual Gameplay</strong>: Field + remote operations</li>
+<li><strong>Deep Narrative</strong>: Spy thriller storyline vs casual
+collection</li>
+<li><strong>Player Agency</strong>: Community-driven content via QR
+deployment</li>
+<li><strong>Accessibility</strong>: Full participation without requiring
+mobility</li>
+</ol>
+<h2 id="risk-assessment">Risk Assessment</h2>
+<h3 id="technical-risks">Technical Risks</h3>
+<ul>
+<li><strong>LLM costs</strong>: Mitigation via caching and local
+models</li>
+<li><strong>Location spoofing</strong>: Anti-cheat with multi-factor
+verification</li>
+<li><strong>Scale</strong>: Start small, validate before expanding</li>
+</ul>
+<h3 id="gameplay-risks">Gameplay Risks</h3>
+<ul>
+<li><strong>Player density</strong>: Focus on SF first to ensure
+encounters</li>
+<li><strong>Engagement</strong>: AI adaptation to maintain interest</li>
+<li><strong>Toxicity</strong>: Strong community moderation and
+reporting</li>
+</ul>
+<h3 id="legal-risks">Legal Risks</h3>
+<ul>
+<li><strong>Trespassing</strong>: Strict mission validation and
+blacklists</li>
+<li><strong>Privacy</strong>: GDPR/CCPA compliance, location
+coarsening</li>
+<li><strong>Safety</strong>: Curfews, safety zones, player
+guidelines</li>
+</ul>
+<h2 id="next-steps">Next Steps</h2>
+<ol type="1">
+<li><strong>Environment Setup</strong>: Run
+<code>docker-compose up -d</code> to start services</li>
+<li><strong>Database Init</strong>: Run <code>pnpm db:setup</code> to
+create schema</li>
+<li><strong>Service Development</strong>: Begin with auth + player
+services</li>
+<li><strong>AI Prototype</strong>: Build mission director with sample
+tools</li>
+<li><strong>Mobile Prototype</strong>: Basic AR scanning and mission
+display</li>
+<li><strong>Testing</strong>: Internal playtest with 10-20 people in
+SF</li>
+</ol>
+<h2 id="team-requirements">Team Requirements</h2>
+<h3 id="engineering">Engineering</h3>
+<ul>
+<li>2x Backend Engineers (Node.js/TypeScript)</li>
+<li>1x Mobile Engineer (React Native)</li>
+<li>1x AI/ML Engineer (Python/LLM)</li>
+<li>1x DevOps Engineer (K8s/Infrastructure)</li>
+</ul>
+<h3 id="product-design">Product &amp; Design</h3>
+<ul>
+<li>1x Product Manager</li>
+<li>1x Game Designer</li>
+<li>1x UX/UI Designer</li>
+<li>1x Narrative Writer</li>
+</ul>
+<h3 id="operations">Operations</h3>
+<ul>
+<li>1x Community Manager</li>
+<li>1x QA/Test Coordinator</li>
+</ul>
+<h2 id="resources">Resources</h2>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li><a href="../README.md">README.md</a> - Project overview</li>
+<li><a href="SETUP.md">SETUP.md</a> - Development environment setup</li>
+<li><a href="gameplay.md">gameplay.md</a> - Complete game design
+document</li>
+<li><a href="tech-stack.md">tech-stack.md</a> - Technical
+architecture</li>
+<li><a href="api/README.md">api/README.md</a> - API documentation</li>
+<li><a href="schemas/database.md">schemas/database.md</a> - Database
+schema</li>
+<li><a href="ai-orchestration.md">ai-orchestration.md</a> - AI system
+details</li>
+</ul>
+<h3 id="external-links">External Links</h3>
+<ul>
+<li><a href="https://reactnative.dev/">React Native Docs</a></li>
+<li><a href="https://nestjs.com/">NestJS Docs</a></li>
+<li><a href="https://postgis.net/">PostGIS Docs</a></li>
+<li><a href="https://python.langchain.com/">LangChain Docs</a></li>
+<li><a href="https://docs.mapbox.com/">Mapbox Docs</a></li>
+</ul>
+<h2 id="contact">Contact</h2>
+<ul>
+<li><strong>GitHub</strong>: <a
+href="https://github.com/yourusername/spynet-ar">github.com/yourusername/spynet-ar</a></li>
+<li><strong>Email</strong>: team@spynet.ar</li>
+<li><strong>Discord</strong>: [Join our server]</li>
+</ul>
+<hr />
+<p><strong>SpyNet AR</strong> - Transform your city into a living spy
+thriller.</p>
+</body>
+</html>

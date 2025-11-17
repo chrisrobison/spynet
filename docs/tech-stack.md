@@ -1,85 +1,267 @@
-# SpyNet AR – Tech Stack & Architecture (MVP→V1)
+# SpyNet AR – Tech Stack & Architecture
 
-This is an actionable, opinionated stack for building the first playable in San Francisco and scaling to multi-city. Choices bias toward fast iteration, battle-tested infrastructure, and low unit cost.
+## Philosophy: Start Simple, Scale Smart
 
-## 0. Product Scope (MVP)
+This document describes our **Lean MVP architecture** - a minimal, cost-effective stack that validates gameplay before investing in complex infrastructure.
 
-- WebAR client with camera overlay, item discovery, and nearby-agent scan
-- QR mission flow (scan → validate → reward → narrative payload)
-- Faction + control zones (read-only in MVP; capture in V1)
-- Remote operations (cipher/puzzle missions) and basic LLM director issuing missions
-- BLE proximity ping + privacy-preserving presence
+**See [LEAN_MVP_PLAN.md](../LEAN_MVP_PLAN.md) for implementation roadmap.**
 
-## 1. Client Stack
+---
 
-### Primary: React Native (iOS/Android)
-- **Framework**: React Native with Expo + native modules
-- **AR**: `react-native-vision-camera` + WebXR bridge or ViroReact (fallback)
-  - Native ARKit/ARCore bridges in V1 for performance
-- **BLE**: `react-native-ble-plx` for scanning/advertising ephemeral service UUIDs
-- **QR**: `react-native-vision-camera` barcode plugin; fallback to ZXing on Android
-- **Map**: Mapbox SDK (offline tiles optional later)
-- **State**: Zustand for light global store; React Query for server sync
-- **Auth**: Sign in with Apple/Google + email-magic; device-bound key pair
-- **Config/Feature Flags**: `react-native-config` + remote flags from Config Service
+## Phase 1: Lean MVP (Weeks 1-6)
 
-### Secondary: Web Companion
-- **Framework**: Next.js 15 + WebXR
-- **Purpose**: Browser demos, dashboards, and puzzle missions
+**Budget**: $25 (QR codes + domain)
+**Goal**: Playable prototype with 5 missions
 
-## 2. Backend & Runtime
+### Frontend Stack
 
-### API Gateway
-- **Server**: Fastify (Node 22) with TypeScript, Zod validation, rate limiting
-- **Alternative**: uWebSockets.js behind Nginx for high-qps endpoints
+#### Web-Only (No Native Apps)
+- **Framework**: Vanilla JavaScript + Web Components
+- **Why**: Zero build step = instant iteration
+- **Architecture**: LARC pattern (event-driven web components)
+- **Bundle Size**: ~10KB unminified
+- **Browser Support**: Modern browsers only (Chrome 90+, Safari 14+)
 
-### Mission/State Services
-- **Framework**: NestJS (TypeScript) microservices
-- **Services by bounded context**:
-  - Auth
-  - Players
-  - Missions
-  - Factions
-  - Zones
-  - Proximity
-  - QR
-  - Inventory
-  - Events
+#### Key Libraries
+```javascript
+// Maps
+import L from 'https://esm.sh/leaflet@1.9.4';
 
-### Realtime
-- **Protocol**: WebSocket over Socket.IO 4 or native `ws`
-- **Organization**: Rooms keyed by zone/faction
+// QR Scanning
+import jsQR from 'https://esm.sh/jsqr@1.4.0';
 
-### LLM Orchestrator
-- **Framework**: Python (FastAPI) tools-first agent service
-- **LLM**: OpenAI-compatible endpoint (switchable to local)
-- **Integration**: Tool functions exposed over gRPC/HTTP
+// HTTP Client
+fetch() // Native browser API
 
-### Workers
-- **Queue**: BullMQ (Redis)
-- **Workflows**: Temporal (V1) for long-running mission workflows (expirations, retries, hedging)
+// State Management
+localStorage // Browser API
+PanClient // LARC event bus
+```
 
-### Databases
+#### No Build Tools
+- No webpack, no vite, no rollup
+- No transpilation, no bundling
+- ES6 modules loaded directly
+- Faster development, simpler debugging
+
+### Backend Stack
+
+#### Single Monolithic API
+- **Server**: Fastify (Node.js 22)
+- **Why Fastify**: Fast, low overhead, good TypeScript support
+- **Pattern**: Dynamic controller routing (no manual route definitions)
+- **Request Flow**:
+  ```
+  GET /players/123 → PlayersController.get(ctx)
+  POST /qr/scan → QrController.scan(ctx)
+  ```
+
+#### Auth
+- **Strategy**: JWT tokens (HS256)
+- **Storage**: Redis for session blacklist
+- **Flow**:
+  1. POST /auth/register → Create account
+  2. POST /auth/login → Return JWT + refresh token
+  3. Include `Authorization: Bearer <token>` in requests
+- **No OAuth yet** (add in Phase 2 if needed)
+
+#### AI Integration (Minimal)
+- **Purpose**: Generate mission briefing variations only
+- **Model**: OpenAI GPT-3.5 or local Ollama
+- **Cost Control**:
+  - Heavy caching (1 hour TTL)
+  - Fallback to templates if API fails
+  - Max 100 tokens per generation
+  - Target: <$20/month
+- **Example**:
+  ```javascript
+  const briefing = await llm.chat({
+    model: 'gpt-3.5-turbo',
+    messages: [{
+      role: 'system',
+      content: 'Write a 2-sentence spy mission briefing. Terse and urgent.'
+    }, {
+      role: 'user',
+      content: `Mission: Retrieve intel from ${location}`
+    }],
+    max_tokens: 100,
+    temperature: 0.8
+  });
+  ```
+
+### Database Stack
 
 #### PostgreSQL 16 (Primary)
-- **Purpose**: Players, missions, items, QR, factions, zones, audit
-- **Extensions**: PostGIS for geospatial queries
+- **Extensions**: PostGIS for geospatial
+- **Schema**: Already defined (see `scripts/db/schema.sql`)
+- **Key Tables**: players, zones, missions, qr_codes, mission_completions
+- **Hosting**: Docker Compose locally, DigitalOcean managed DB in production
 
-#### Redis 7
-- **Purpose**: Presence, control meters, rate limits, ephemeral tokens
-- **Data structures**: Sets, sorted sets, TTL keys
+#### Geospatial Queries
+```sql
+-- Find zone containing a point
+SELECT * FROM zones
+WHERE ST_Contains(
+  polygon,
+  ST_SetSRID(ST_MakePoint(lon, lat), 4326)::geography
+);
 
-#### S3-Compatible Object Store
-- **Purpose**: Mission media, signed payload archives
+-- Check if player is within 100m of QR code
+SELECT ST_Distance(
+  qr_codes.location,
+  ST_SetSRID(ST_MakePoint(player_lon, player_lat), 4326)::geography
+) < 100;
+```
 
-#### ClickHouse
-- **Purpose**: Event analytics, player behavior analysis
+#### Redis 7 (Caching)
+- **Purpose**:
+  - Session storage
+  - Rate limiting
+  - AI response cache
+  - Temporary game state
+- **Data Structures**:
+  - `session:{token}` → Player ID (TTL: 7 days)
+  - `ratelimit:{ip}:{endpoint}` → Request count (TTL: 1 minute)
+  - `llm:briefing:{mission_id}:{faction}` → Cached briefing (TTL: 1 hour)
 
-### Infrastructure
-- **Container Orchestration**: Kubernetes (GKE Autopilot)
-- **Managed Services**: Cloud SQL (Postgres) + MemoryStore (Redis)
-- **IaC**: Terraform + Terragrunt
-- **CDN/WAF**: Cloudflare for CDN/WAF/Workers (edge token checks)
+### Infrastructure (Development)
+
+#### Local Development
+```yaml
+# docker-compose.yml
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    ports: [5432:5432]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports: [6379:6379]
+```
+
+#### Production (Phase 1)
+- **Hosting**: Single VPS ($20/month)
+  - DigitalOcean Droplet (4GB RAM, 2 vCPU)
+  - OR Hetzner Cloud (cheaper)
+- **Database**: Managed PostgreSQL ($15/month)
+- **Process Management**: PM2 (not Docker/K8s)
+- **SSL**: Let's Encrypt (free)
+- **Domain**: Cloudflare DNS (free tier)
+- **Total**: ~$40/month
+
+### What We're NOT Building (Phase 1)
+
+❌ **No Mobile Apps** - Web-first validation
+❌ **No AR** - Map-based gameplay
+❌ **No BLE** - Manual player encounters
+❌ **No Microservices** - Monolith is simpler
+❌ **No Kubernetes** - Overkill for <100 users
+❌ **No Real-time WebSockets** - Polling is fine
+❌ **No Analytics DB** - Postgres is enough
+❌ **No Object Storage** - No uploaded content yet
+❌ **No CI/CD** - Manual deploy is fine for MVP
+
+---
+
+## Phase 2: Multiplayer Beta (Weeks 7-12)
+
+**Budget**: $150/month
+**Goal**: 10-20 active players with faction competition
+
+### New Requirements
+- Higher availability (uptime monitoring)
+- Better performance (CDN for static assets)
+- Social features (see other players)
+- More content (20 missions, 10 zones)
+
+### Infrastructure Upgrades
+- **CDN**: Cloudflare (free tier) for `public/` assets
+- **Monitoring**: UptimeRobot (free tier)
+- **Logging**: Papertrail or Loki (free tier)
+- **Backups**: Automated daily DB backups to S3 ($5/month)
+
+### Still No Need For:
+- Kubernetes
+- Microservices
+- Dedicated analytics DB
+- Mobile apps
+
+---
+
+## Phase 3: Public Launch (Weeks 13-20)
+
+**Budget**: $200-300/month
+**Goal**: 50-100 active players
+
+### Infrastructure Scaling
+- **Horizontal Scaling**: 2x app servers behind load balancer
+- **Database**: Read replicas for leaderboards
+- **CDN**: Cloudflare Pro ($20/month) for better caching
+- **Monitoring**: DataDog or New Relic ($50/month)
+- **LLM**: Increase budget to $100/month
+- **Total**: ~$250/month
+
+### Optional Additions
+- **WebSockets**: For real-time leaderboard updates
+- **Job Queue**: BullMQ for async tasks
+- **Analytics**: Plausible or Simple Analytics ($10/month)
+
+### Still Deferring:
+- Native mobile apps (until validated)
+- AR features (until validated)
+- Microservices (monolith working fine)
+- Kubernetes (not needed yet)
+
+---
+
+## Future Architecture (Post-MVP Success)
+
+Only pursue if Phase 3 succeeds (50+ WAU, 40% D7 retention).
+
+### When to Scale Up
+
+**Mobile Apps** - If web UX becomes limiting
+- React Native + Expo
+- Native QR scanning (better than browser)
+- Push notifications
+- Offline gameplay
+
+**AR Features** - If players ask for it
+- ARKit/ARCore integration
+- 3D item visualization
+- Spatial anchors
+
+**Microservices** - If monolith becomes bottleneck (>1000 DAU)
+- Split by domain: Auth, Players, Missions, Zones
+- Use NestJS for consistency
+- Deploy to Kubernetes (GKE)
+
+**Real-time Systems** - If competition demands it
+- WebSocket with Socket.IO
+- Redis Pub/Sub
+- Zone update broadcasts
+
+**Advanced AI** - If it adds significant value
+- Procedural mission generation
+- Adaptive difficulty
+- Dynamic narrative
+- Voice missions
+
+**Multi-City** - If one city is saturated
+- Database sharding by geography
+- Regional deployments
+- City-specific content
+
+### Cost at Scale (1000 DAU)
+- Infrastructure: $500-1000/month
+- LLM API: $200-500/month
+- Monitoring/Logging: $100/month
+- CDN/Bandwidth: $100/month
+- **Total**: ~$1000-2000/month
+
+Still far cheaper than original plan ($10-30K/month).
 
 ## 3. Data Model (Core Tables)
 

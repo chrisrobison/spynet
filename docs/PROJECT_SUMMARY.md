@@ -2,66 +2,90 @@
 
 ## Project Overview
 
-SpyNet AR is an ambitious location-based augmented reality espionage game that merges the digital and physical worlds. Players become secret agents, completing missions, scanning QR codes, spotting other operatives, and battling for control of real-world territory through their mobile devices.
+SpyNet AR is a location-based espionage game that transforms your city into a living spy thriller. Players become secret agents, completing missions, scanning QR codes at real-world locations, and battling for control of territory through a web-based interface.
+
+**Current Focus: Lean MVP** - We're building a web-first, focused prototype to validate core gameplay before investing in mobile apps, AR, and complex AI systems.
 
 ## Core Innovation
 
-The game's primary innovation is its **AI-orchestrated mission system**. A Large Language Model (LLM) acts as the "SpyNet Intelligence Network," dynamically generating personalized missions, crafting emergent narratives, and adapting gameplay based on player behavior and real-world events. This creates a living, breathing spy thriller where every player's actions influence the global story.
+The game combines **physical QR code treasure hunting** with **territory control mechanics** and **narrative-driven espionage missions**. An AI assistant helps generate mission briefings and flavor text, but the core gameplay loop is designed to be fun without requiring expensive real-time AI generation.
 
-## Key Features
+## Lean MVP Features (Current Focus)
 
-### 1. Hybrid Physical-Digital Gameplay
-- **AR Exploration**: Discover virtual items overlaid on real environments
-- **QR Code Missions**: Scan codes hidden at real-world locations
-- **Proximity Detection**: Use Bluetooth to detect nearby players
-- **Territory Control**: Capture and defend geographic zones
+### 1. Core Gameplay Loop
+- **QR Code Missions**: Print and place QR codes at 5-10 locations in your city
+- **Web-Based Scanner**: Use browser to scan QR codes (no app needed)
+- **Territory Control**: Capture zones by completing missions in that area
+- **Simple Progression**: XP, ranks, and credits earned through missions
 
-### 2. AI-Driven Dynamic Content
-- **Personalized Missions**: LLM generates missions tailored to player skill and location
-- **Emergent Narrative**: Stories evolve based on collective player actions
-- **Adaptive Difficulty**: AI adjusts challenges based on performance
-- **Real-time Events**: Dynamic world events respond to faction wars
-
-### 3. Faction Warfare
+### 2. Faction System (Simplified)
 - **Three Rival Agencies**:
-  - **The Obsidian Order** - Deception and psychological warfare
-  - **The Aurora Syndicate** - Tech anarchists and hackers
-  - **The Citadel Directorate** - Military precision and control
-- **Double Agent System**: Players can switch sides or operate as moles
-- **Territory Control**: Factions battle for control of city zones
-- **Strategic Objectives**: Long-term faction goals and seasonal campaigns
+  - **The Obsidian Order** - Deception specialists
+  - **The Aurora Syndicate** - Tech hackers
+  - **The Citadel Directorate** - Military tacticians
+- **Choose Your Side**: Players pick one faction to support
+- **Zone Control**: Factions compete for control of city zones
+- **Leaderboards**: Track top agents per faction
 
-### 4. Inclusive Gameplay
-- **Field Operations**: Physical exploration for mobile players
-- **Remote Missions**: Cipher puzzles and intel analysis from home
-- **Command Roles**: Strategic coordination for high-ranking agents
-- **Hybrid Operations**: Coordination between field and remote agents
+### 3. Mission Types (MVP)
+- **QR Scan Missions**: Find and scan codes at specific locations
+- **Territory Surveillance**: Spend time in a zone to claim it
+- **Intel Collection**: Complete simple cipher puzzles (web-based)
+- **Faction Objectives**: Help your faction capture key zones
 
-## Technical Architecture
+### 4. AI-Assisted Content (Limited)
+- **Mission Briefings**: AI generates narrative flavor text
+- **Player Profiles**: AI creates spy codenames and bios
+- **Faction Updates**: AI writes faction status reports
+- **Cost-Controlled**: Pre-cache content, not real-time generation
 
-### Frontend
-- **Mobile**: React Native + Expo (iOS/Android)
-- **Web**: Next.js for companion app and remote missions
-- **AR**: ARKit/ARCore with WebXR fallback
-- **Maps**: Mapbox for location services
+## Future Vision (Post-MVP)
 
-### Backend
-- **API**: NestJS microservices (Node.js 22 + TypeScript)
-- **AI Orchestrator**: Python FastAPI with LLM integration
-- **Real-time**: WebSocket with Socket.IO
-- **Workers**: BullMQ + Temporal for async operations
+*The following features are planned for after MVP validation:*
+- Mobile apps (iOS/Android) with native QR scanning
+- AR overlay for item discovery
+- BLE proximity detection for player encounters
+- Real-time AI mission generation
+- Player-deployed QR codes
+- Voice missions and advanced narrative
 
-### Data Layer
-- **PostgreSQL 16**: Primary database with PostGIS for geospatial
-- **Redis 7**: Presence tracking, rate limiting, caching
-- **ClickHouse**: Analytics and event streaming
-- **MinIO**: S3-compatible object storage
+## Technical Architecture (Lean MVP)
 
-### Infrastructure
-- **Kubernetes**: GKE Autopilot for container orchestration
-- **Cloudflare**: CDN, WAF, and edge computing
-- **Terraform**: Infrastructure as Code
-- **GitHub Actions**: CI/CD pipeline
+### Frontend (Web-Only)
+- **Framework**: Vanilla JavaScript + Web Components (LARC)
+- **QR Scanning**: Browser WebRTC + jsQR library
+- **Maps**: Leaflet.js (open source, no API costs)
+- **PWA**: Installable web app with offline support
+- **No Build Step**: Direct browser execution for fast iteration
+
+### Backend (Simplified)
+- **API**: Node.js + Fastify (dynamic routing)
+- **Single Service**: Monolithic to start, split later if needed
+- **AI Helper**: OpenAI/local LLM for text generation only
+- **No Real-time**: Polling-based updates (WebSocket later)
+- **No Workers**: Direct execution (job queues post-MVP)
+
+### Data Layer (Minimal)
+- **PostgreSQL 16**: Primary database with PostGIS
+- **Redis 7**: Session storage and rate limiting
+- **Local Storage**: Browser storage for offline capability
+- **No Analytics DB**: Use PostgreSQL for MVP metrics
+
+### Infrastructure (Development-Friendly)
+- **Docker Compose**: Local development stack
+- **Single VPS**: Deploy to DigitalOcean/Hetzner (~$20/mo)
+- **No Kubernetes**: Simple Node.js process manager (PM2)
+- **No CDN**: Direct serving (Cloudflare free tier later)
+- **No IaC**: Manual setup initially, automate later
+
+### Future Architecture (Post-MVP)
+*After validation, scale up to:*
+- React Native mobile apps
+- Microservices architecture (NestJS)
+- Kubernetes orchestration
+- Real-time WebSocket system
+- Dedicated analytics database
+- Multi-region deployment
 
 ## Game Mechanics
 
@@ -132,84 +156,127 @@ Game design documents are embedded in pgvector, allowing the AI to:
 - Content policy enforcement
 - Anti-cheating validation
 
-## Development Roadmap
+## Development Roadmap (Lean MVP)
 
-### Milestone A (4-6 weeks) - Core Systems
-- [ ] Player authentication and profiles
-- [ ] QR code scanning and validation
-- [ ] Basic mission system
-- [ ] BLE proximity detection
-- [ ] Zone definitions and mapping
-- [ ] WebAR overlay prototype
+### Phase 1: Playable Prototype (4-6 weeks, 1-2 people)
+**Goal**: Single-player experience with 5 QR codes in one neighborhood
 
-### Milestone B (6-10 weeks) - Faction Wars
-- [ ] Control zone mechanics
-- [ ] Faction recruitment system
-- [ ] LLM mission director integration
-- [ ] Real-time zone updates via WebSocket
-- [ ] Anti-cheat v1 (location verification)
-- [ ] Analytics dashboards
+- [x] Database schema complete
+- [x] Basic API server with auth
+- [ ] Web frontend with QR scanner
+- [ ] Map view with zones (Leaflet.js)
+- [ ] Player profile and progression
+- [ ] 5 pre-written missions with QR codes
+- [ ] Simple zone capture mechanic
+- [ ] AI-generated mission briefings
 
-### Milestone C (10-14 weeks) - Launch Prep
-- [ ] Double-agent mechanics
-- [ ] City-wide faction events
-- [ ] Narrative broadcast system
-- [ ] iOS/Android app store release
-- [ ] San Francisco pilot launch
-- [ ] Venue partner program
+**Success Metric**: One person can play the game for 30 minutes and have fun
 
-### Post-Launch
-- Multi-city expansion (Oakland, Berkeley, San Jose)
-- Advanced AI features (voice missions, image analysis)
-- Monetization (cosmetics, agent kits, season pass)
-- Community content creation tools
+### Phase 2: Multiplayer Beta (6-10 weeks)
+**Goal**: 10-20 testers playing in one city with faction competition
 
-## Business Model
+- [ ] Faction selection on signup
+- [ ] Faction leaderboards
+- [ ] 15-20 QR codes across 3-5 zones
+- [ ] Basic social features (see other players on map)
+- [ ] Mission progress tracking
+- [ ] Faction territory control visualization
+- [ ] Admin dashboard connected to real data
 
-### Free-to-Play Core
-All essential gameplay is free:
-- Mission participation
-- Faction membership
-- Territory control
-- Basic progression
+**Success Metric**: 10+ active players, 50% return next day
 
-### Premium Offerings
-- **Cosmetics**: Scanner skins, avatar customization
-- **Agent Kits**: Physical QR printer bundles ($49-99)
-- **Season Pass**: Exclusive missions and storylines ($9.99/season)
-- **Venue Partnerships**: Sponsored missions at bars/venues
+### Phase 3: Public Launch (10-14 weeks)
+**Goal**: 50-100 active players, sustainable gameplay
 
-### Partnerships
-- **Local Businesses**: QR placement agreements
-- **Tourism Boards**: Historical mission content
-- **Tech Companies**: AR hardware partnerships
+- [ ] 30+ missions across full city
+- [ ] Weekly faction challenges
+- [ ] Player onboarding flow
+- [ ] Mobile-responsive PWA
+- [ ] Basic anti-cheat (location verification)
+- [ ] Community features (chat, faction feed)
+- [ ] Analytics and retention tracking
 
-## Target Launch
+**Success Metric**: 50+ weekly active players, viable unit economics
 
-**Location**: San Francisco, CA
-**Timeline**: Q3 2025 (Milestone C completion)
-**Initial Scale**: 100-500 active players
-**Venue Partners**: 3-5 bars/cafes/tourist spots
+### Post-MVP Expansion (If Validated)
+**Only pursue if Phase 3 succeeds:**
+- Native mobile apps (iOS/Android)
+- AR item discovery
+- Player-generated content (deploy QR codes)
+- Real-time AI mission generation
+- Multi-city expansion
+- Advanced social features (BLE encounters)
+- Monetization (season pass, cosmetics)
 
-## Success Metrics
+## Business Model (MVP Focus)
 
-### Engagement
-- Daily Active Users (DAU)
-- Session length
-- Missions completed per player
-- Retention (D1, D7, D30)
+### MVP: Completely Free
+- No monetization during MVP phase
+- Focus 100% on proving the gameplay is fun
+- All features available to all players
+- Goal: Validate retention before worrying about revenue
 
-### Social
-- Agent encounters per day
-- Faction participation rate
-- Drop discovery rate
-- Community QR deployments
+### Post-MVP Monetization (If Validated)
+Only implement if we achieve 50+ weekly active players:
 
-### Revenue
-- Conversion rate to paid features
-- Average revenue per user (ARPU)
-- Agent kit sales
-- Season pass subscriptions
+- **Tip Jar**: Optional supporter donations
+- **Faction Boost**: $2.99/month for cosmetic perks
+- **Physical QR Kits**: Sell printed QR code packs ($19.99)
+- **Local Business Partnerships**: Sponsored missions at venues
+
+### Cost Structure (MVP)
+**Total Monthly Burn: $50-150**
+- VPS hosting: $20-40/month
+- Domain + SSL: $10/month
+- LLM API costs: $20-50/month (caching-heavy)
+- Database backup storage: $5/month
+
+**Sustainable at zero revenue during validation phase**
+
+## Target Launch (Revised)
+
+### Phase 1 Launch (Prototype)
+- **Location**: Single neighborhood (your city)
+- **Timeline**: 6 weeks from today
+- **Initial Scale**: You + 2-3 friends
+- **Venue Partners**: 0 (place QR codes yourself)
+
+### Phase 2 Launch (Beta)
+- **Location**: Full city (one metro area)
+- **Timeline**: 12 weeks from today
+- **Initial Scale**: 10-20 active testers
+- **Venue Partners**: 1-2 friendly cafes/bars
+
+### Phase 3 Launch (Public)
+- **Location**: Same city, expanded zones
+- **Timeline**: 20 weeks from today
+- **Initial Scale**: 50-100 active players
+- **Venue Partners**: 5-10 local businesses
+
+## Success Metrics (Lean)
+
+### Phase 1 Success Criteria
+- [ ] You personally find the game fun
+- [ ] 3 friends try it and 2 come back
+- [ ] Zero critical bugs in core loop
+- [ ] Core loop playable in 30 minutes
+
+### Phase 2 Success Criteria
+- [ ] 10+ players recruited
+- [ ] 50% D1 retention (return next day)
+- [ ] 30% D7 retention (return next week)
+- [ ] 3+ missions completed per player
+- [ ] All three factions have players
+
+### Phase 3 Success Criteria
+- [ ] 50+ weekly active users
+- [ ] 40% D7 retention
+- [ ] 20% D30 retention
+- [ ] 10+ missions completed per active player
+- [ ] Organic word-of-mouth growth
+- [ ] Clear path to 100+ players
+
+**If Phase 3 fails, pivot or sunset project. Don't keep building without validation.**
 
 ## Competitive Landscape
 

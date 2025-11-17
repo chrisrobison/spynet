@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>gameplay</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://cdr2.com/pandoc.css" />
+</head>
+<body>
+<h1 id="spynet-ar-game-design-document">SpyNet AR: Game Design
+Document</h1>
+<h2 id="title">Title</h2>
+<p><strong>SpyNet AR: The Real-World Espionage Game</strong></p>
+<h2 id="overview">Overview</h2>
+<p>SpyNet AR is a location-aware augmented reality game that transforms
+real-world environments into a covert playground for agents on secret
+missions. Using only their mobile device, players search for hidden
+digital items, scan real-world QR codes, and interact with nearby
+players to earn points and climb the ranks of the SpyNet hierarchy.</p>
+<p>An embedded AI-driven mission system dynamically orchestrates
+gameplay, issuing personalized objectives, tracking player progress, and
+crafting emergent narratives where real humans become both allies and
+adversaries. Over time, players align with rival factions or become
+double agents, influencing the course of an evolving global shadow
+war.</p>
+<p>SpyNet AR is designed for inclusivity: while many missions involve
+physical exploration, players who prefer or require remote play can
+participate fully through virtual, analytical, and communication-based
+missions that support their faction’s efforts.</p>
+<h2 id="core-gameplay-loop">Core Gameplay Loop</h2>
+<h3 id="exploration-and-discovery">1. Exploration and Discovery</h3>
+<p>Players open the SpyNet AR app and use their phone’s camera to scan
+their surroundings. Through AR overlays, they discover virtual items
+such as gold coins, diamonds, or encrypted data caches. These are
+procedurally distributed around real-world map coordinates, weighted
+toward populated or landmark areas.</p>
+<h3 id="dropping-assets">2. Dropping Assets</h3>
+<p>Players can drop their own virtual items (“dead drops”) for others to
+find. When another player discovers your drop, you receive a reward
+multiplier that increases the more your items are found. This encourages
+exploration, movement, and organic collaboration between players.</p>
+<h3 id="spotting-agents">3. Spotting Agents</h3>
+<p>Using Bluetooth Low Energy (BLE) proximity detection, players can
+scan nearby areas for other agents who are also playing. Spotting
+another spy gives both players points, and tapping their AR icon can
+trigger a quick interaction (e.g., a challenge mini-game, handshake, or
+bluff mechanic).</p>
+<h3 id="missions-and-qr-integration">4. Missions and QR Integration</h3>
+<p>Special missions involve finding and scanning QR codes hidden in the
+real world. These codes can be placed by the game administrators or by
+advanced players who have earned the ability to deploy them. Scanning a
+QR unlocks new missions, clues, or special rewards.</p>
+<h3 id="rank-and-reputation">5. Rank and Reputation</h3>
+<p>Points accumulate through exploration, drops, and interactions,
+contributing to a global leaderboard. Ranks range from “Rookie
+Operative” to “Field Commander” to “Ghost Agent.” Players can view stats
+such as how many times they’ve been spotted or how many of their drops
+have been collected.</p>
+<h2 id="faction-and-allegiance-system">Faction and Allegiance
+System</h2>
+<h3 id="independent-operatives">Independent Operatives</h3>
+<p>Players begin the game as Independent Operatives, free agents taking
+jobs from the AI mission director. As they complete missions, they
+attract attention from major shadow organizations within the game’s
+world — each with its own ideology, style, and long-term goals.</p>
+<h3 id="factions">Factions</h3>
+<h4 id="the-obsidian-order">The Obsidian Order</h4>
+<ul>
+<li><strong>Philosophy</strong>: Masters of deception, surveillance, and
+psychological warfare</li>
+<li><strong>Strengths</strong>: Misinformation and
+counterintelligence</li>
+<li><strong>Style</strong>: Subtle, manipulative, operates in
+shadows</li>
+</ul>
+<h4 id="the-aurora-syndicate">The Aurora Syndicate</h4>
+<ul>
+<li><strong>Philosophy</strong>: Tech-forward anarchists seeking to
+expose global secrets</li>
+<li><strong>Strengths</strong>: Digital infiltration and hacking
+missions</li>
+<li><strong>Style</strong>: Disruptive, transparent,
+anti-establishment</li>
+</ul>
+<h4 id="the-citadel-directorate">The Citadel Directorate</h4>
+<ul>
+<li><strong>Philosophy</strong>: Military-precision loyalists who
+prioritize structure, efficiency, and control</li>
+<li><strong>Strengths</strong>: Tactical and combat-style missions</li>
+<li><strong>Style</strong>: Disciplined, hierarchical, rule-based</li>
+</ul>
+<h3 id="recruitment-events">Recruitment Events</h3>
+<p>At key milestones, a player may receive a cryptic message from a
+faction recruiter — an AI persona or a live player operating as a
+handler. The player can accept or ignore the offer, remaining
+independent or pledging loyalty to a faction.</p>
+<h3 id="faction-rivalries">Faction Rivalries</h3>
+<p>The world of SpyNet AR operates on a persistent conflict between
+these factions. Control over real-world locations (e.g., city landmarks
+or QR drop zones) determines faction dominance. Weekly or seasonal
+storylines unfold based on which faction holds key intel or
+resources.</p>
+<h3 id="double-agents">Double Agents</h3>
+<p>Players can be persuaded or coerced into switching sides. The AI may
+tempt a player with special rewards or secret missions to betray their
+faction. Double agents can feed false intel, sabotage missions, or
+secretly aid another faction — at the risk of exposure.</p>
+<h2 id="remote-and-virtual-operations">Remote and Virtual
+Operations</h2>
+<p>Not every agent needs to be out in the field. The SpyNet Intelligence
+Network (SIN) ensures that players can contribute from anywhere by
+performing remote operations that strengthen their faction and shape the
+global conflict.</p>
+<h3 id="cyber-missions">1. Cyber Missions</h3>
+<p>These include encryption/decryption tasks, codebreaking puzzles, and
+simulated hacking events. The AI mission director can generate cipher
+challenges or steganographic images requiring logical deduction rather
+than physical movement.</p>
+<h3 id="strategic-intel-analysis">2. Strategic Intel Analysis</h3>
+<p>Players may receive intercepted communications, surveillance images,
+or partial data logs and must piece together the intel to reveal clues
+or sabotage an enemy operation. Successful analysis contributes to
+faction intelligence points.</p>
+<h3 id="virtual-dead-drops">3. Virtual Dead Drops</h3>
+<p>Remote players can create or discover virtual-only drops in global
+map zones. These appear as digital-only items that field agents can
+later physically locate. This forms a cooperative relationship between
+remote analysts and field operatives.</p>
+<h3 id="social-engineering-missions">4. Social Engineering Missions</h3>
+<p>Through in-game communication channels, remote players might engage
+in persuasion or misinformation tasks, influencing rival agents or
+feeding deceptive intel into the faction network.</p>
+<h3 id="command-and-coordination-roles">5. Command and Coordination
+Roles</h3>
+<p>High-ranking remote agents can act as mission controllers or
+strategists. They issue real-time orders to field agents during live
+operations, acting as a kind of digital spymaster.</p>
+<p>All of these mission types award points and currency, ensuring that
+every player — regardless of mobility or location — has meaningful
+impact within the SpyNet world.</p>
+<h2 id="faction-wars-and-control-zones">Faction Wars and Control
+Zones</h2>
+<p>Faction wars are large-scale, ongoing conflicts that define the
+meta-narrative of SpyNet AR. These wars take place across Control Zones
+— real-world geographic regions such as neighborhoods, landmarks, or
+transit stations. Players compete to capture and hold these zones
+through AR actions, QR scans, and coordinated faction missions.</p>
+<h3 id="control-zone-types">Control Zone Types</h3>
+<h4 id="micro-zones">Micro Zones</h4>
+<p>Individual landmarks (e.g., the Ferry Building, Dolores Park)</p>
+<h4 id="meso-zones">Meso Zones</h4>
+<p>Neighborhood-level regions (e.g., The Mission District)</p>
+<h4 id="macro-zones">Macro Zones</h4>
+<p>Entire city sectors (e.g., Downtown San Francisco)</p>
+<h3 id="control-mechanics">Control Mechanics</h3>
+<p>Each zone maintains a real-time <strong>Control Meter</strong>
+showing which faction holds dominance, calculated through:</p>
+<ul>
+<li>Number of active agents present</li>
+<li>Successful mission completions within the zone</li>
+<li>QR code scans tied to that region</li>
+<li>Frequency and success of agent-versus-agent encounters</li>
+<li>Remote mission support, such as successful intel analysis or data
+recovery</li>
+</ul>
+<h3 id="zone-capture">Zone Capture</h3>
+<p>To capture a zone, a faction must maintain dominance for a continuous
+period (e.g., 24 hours). Players contribute by completing missions,
+scanning control QR codes, or deploying digital assets (like encrypted
+beacons). Remote players can support through digital missions like
+intercepting comms or decoding data.</p>
+<h3 id="narrative-integration">Narrative Integration</h3>
+<h4 id="the-war-for-influence">The War for Influence</h4>
+<p>Each city becomes a living map of espionage territory. The AI mission
+director narrates ongoing developments through broadcast-style updates —
+encrypted messages, faction briefings, and intercepted
+transmissions.</p>
+<h4 id="dynamic-story-evolution">Dynamic Story Evolution</h4>
+<p>As factions gain or lose zones, the LLM adjusts the world narrative
+in real time. Cities evolve organically — alliances shift, betrayals
+unfold, and double agents emerge. Seasonal resets (every few months)
+allow the narrative to pivot, introducing new world events or emerging
+factions.</p>
+<h4 id="player-impact">Player Impact</h4>
+<p>Every player’s action — whether in the field or behind a keyboard —
+influences the faction war. The AI uses aggregated player data to alter
+outcomes, so the global story reflects collective behavior rather than
+prewritten scripts.</p>
+<h4 id="global-operations">Global Operations</h4>
+<p>Once multiple cities are active, global-scale faction wars can occur.
+The AI links events between cities, creating transcontinental operations
+where players in San Francisco might affect outcomes in Tokyo or
+London.</p>
+<h3 id="control-zone-rewards">Control Zone Rewards</h3>
+<p>Players in the dominant faction receive ongoing bonuses — increased
+rewards for missions, faster progression, or access to restricted
+intelligence. Zones under heavy contest become high-value targets with
+temporary boosts to player activity.</p>
+<h2 id="ai-orchestrated-mission-system">AI-Orchestrated Mission
+System</h2>
+<p>At the heart of SpyNet AR lies the <strong>SpyNet Intelligence
+Network (SIN)</strong> — an AI-driven orchestration engine powered by a
+large language model (LLM) that manages missions, player interactions,
+and dynamic narrative events.</p>
+<h3 id="ai-mission-director">1. AI Mission Director</h3>
+<p>The LLM acts as a mission director, analyzing real-time player
+behavior, faction dynamics, and event history to issue missions that
+maintain engagement and tension. It creates objectives such as:</p>
+<ul>
+<li><strong>Surveillance Missions</strong>: “Follow Agent X for three
+minutes without being detected.”</li>
+<li><strong>Counterintelligence Operations</strong>: “Retrieve the
+encrypted drop placed by another player before they do.”</li>
+<li><strong>Faction Raids</strong>: “Intercept Aurora Syndicate
+operatives at Union Square and secure their data cache.”</li>
+<li><strong>Remote Analysis</strong>: “Decrypt an intercepted message
+containing Obsidian Order coordinates.”</li>
+<li><strong>Collaborative Tasks</strong>: “Coordinate remotely with two
+agents in the field to triangulate an encrypted signal.”</li>
+</ul>
+<h3 id="player-to-player-dynamics">2. Player-to-Player Dynamics</h3>
+<p>The AI uses behavioral data to set players against or alongside one
+another — sometimes encouraging cooperation, other times rivalry. It may
+leak partial information between agents to incite bluffing,
+misinformation, or betrayal.</p>
+<h3 id="narrative-continuity">3. Narrative Continuity</h3>
+<p>Each mission ties into an overarching spy thriller storyline that
+unfolds dynamically. The AI generates short narrative bursts, encrypted
+transmissions, or intercepted messages to maintain immersion and
+continuity.</p>
+<h3 id="real-time-adaptation">4. Real-Time Adaptation</h3>
+<p>If a player abandons a mission or strays too far, the AI seamlessly
+reassigns or modifies objectives, preventing stagnation. Over time, the
+AI builds a dossier on each player’s style (stealthy, aggressive,
+analytical, cooperative) and tailors missions accordingly.</p>
+<h3 id="tool-based-orchestration">5. Tool-Based Orchestration</h3>
+<p>The AI interacts with in-game tools and APIs to:</p>
+<ul>
+<li>Assign and validate missions (via signed tokens)</li>
+<li>Track QR scan completions</li>
+<li>Manage faction control points</li>
+<li>Integrate remote operations</li>
+<li>Match players into proximity-based encounters</li>
+<li>Update leaderboards and dossiers in real time</li>
+</ul>
+<h2 id="mission-types">Mission Types</h2>
+<h3 id="field-missions">Field Missions</h3>
+<ul>
+<li><strong>QR Scan</strong>: Find and scan specific QR codes</li>
+<li><strong>Dead Drop</strong>: Place items in specific locations</li>
+<li><strong>Surveillance</strong>: Track or follow targets</li>
+<li><strong>Territory Control</strong>: Maintain presence in zones</li>
+<li><strong>Agent Encounters</strong>: Detect and interact with nearby
+players</li>
+</ul>
+<h3 id="remote-missions">Remote Missions</h3>
+<ul>
+<li><strong>Cipher Breaking</strong>: Decrypt encoded messages</li>
+<li><strong>Pattern Analysis</strong>: Find patterns in data sets</li>
+<li><strong>Image Analysis</strong>: Examine surveillance photos</li>
+<li><strong>Social Engineering</strong>: Persuade or mislead other
+players</li>
+<li><strong>Strategic Planning</strong>: Coordinate multi-player
+operations</li>
+</ul>
+<h3 id="hybrid-missions">Hybrid Missions</h3>
+<ul>
+<li><strong>Triangulation</strong>: Remote and field players work
+together to locate targets</li>
+<li><strong>Intelligence Relay</strong>: Field agents gather data,
+remote agents analyze it</li>
+<li><strong>Coordinated Strikes</strong>: Synchronized actions across
+multiple zones</li>
+</ul>
+<h2 id="progression-system">Progression System</h2>
+<h3 id="ranks">Ranks</h3>
+<ol type="1">
+<li>Rookie Operative</li>
+<li>Field Agent</li>
+<li>Senior Operative</li>
+<li>Handler</li>
+<li>Field Commander</li>
+<li>Master Spy</li>
+<li>Ghost Agent</li>
+</ol>
+<h3 id="reputation">Reputation</h3>
+<p>Earned through: - Mission completion - Agent encounters - Drop
+discoveries - Faction contributions - Community engagement</p>
+<h3 id="unlocks">Unlocks</h3>
+<ul>
+<li>Advanced mission types</li>
+<li>QR deployment ability</li>
+<li>Faction recruitment</li>
+<li>Command roles</li>
+<li>Special equipment/items</li>
+</ul>
+<h2 id="safety-and-legal">Safety and Legal</h2>
+<h3 id="no-trespassing">No Trespassing</h3>
+<ul>
+<li>No missions requiring entry to paid/secure/private spaces</li>
+<li>Blacklist polygons (schools, hospitals, transit tracks)</li>
+<li>Curfew windows for minors</li>
+</ul>
+<h3 id="privacy">Privacy</h3>
+<ul>
+<li>Differential privacy for public leaderboards</li>
+<li>Coarse location (100-300m) outside live missions</li>
+<li>GDPR/CCPA compliant data handling</li>
+</ul>
+<h3 id="venue-partner-program">Venue Partner Program</h3>
+<ul>
+<li>Opt-in QR placement agreements with auto-expiry</li>
+<li>Business partnerships for legitimate placement</li>
+<li>Community reporting for inappropriate locations</li>
+</ul>
+<h2 id="summary">Summary</h2>
+<p>SpyNet AR transforms daily life into a living espionage simulation.
+The AI mission director keeps the world alive — learning, adapting, and
+manipulating the social web of players into factional rivalries,
+double-agent betrayals, and emergent spy stories that unfold across real
+streets, desktops, and mobile screens — ensuring that every player can
+contribute, whether in the field or behind enemy lines from home.</p>
+</body>
+</html>

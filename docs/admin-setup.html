@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>ADMIN_SETUP</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #232629;
+        color: #7a7c7d;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #7a7c7d;  padding-left: 4px; }
+    div.sourceCode
+      { color: #cfcfc2; background-color: #232629; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #cfcfc2; } /* Normal */
+    code span.al { color: #95da4c; background-color: #4d1f24; font-weight: bold; } /* Alert */
+    code span.an { color: #3f8058; } /* Annotation */
+    code span.at { color: #2980b9; } /* Attribute */
+    code span.bn { color: #f67400; } /* BaseN */
+    code span.bu { color: #7f8c8d; } /* BuiltIn */
+    code span.cf { color: #fdbc4b; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #3daee9; } /* Char */
+    code span.cn { color: #27aeae; font-weight: bold; } /* Constant */
+    code span.co { color: #7a7c7d; } /* Comment */
+    code span.cv { color: #7f8c8d; } /* CommentVar */
+    code span.do { color: #a43340; } /* Documentation */
+    code span.dt { color: #2980b9; } /* DataType */
+    code span.dv { color: #f67400; } /* DecVal */
+    code span.er { color: #da4453; text-decoration: underline; } /* Error */
+    code span.ex { color: #0099ff; font-weight: bold; } /* Extension */
+    code span.fl { color: #f67400; } /* Float */
+    code span.fu { color: #8e44ad; } /* Function */
+    code span.im { color: #27ae60; } /* Import */
+    code span.in { color: #c45b00; } /* Information */
+    code span.kw { color: #cfcfc2; font-weight: bold; } /* Keyword */
+    code span.op { color: #cfcfc2; } /* Operator */
+    code span.ot { color: #27ae60; } /* Other */
+    code span.pp { color: #27ae60; } /* Preprocessor */
+    code span.re { color: #2980b9; background-color: #153042; } /* RegionMarker */
+    code span.sc { color: #3daee9; } /* SpecialChar */
+    code span.ss { color: #da4453; } /* SpecialString */
+    code span.st { color: #f44f4f; } /* String */
+    code span.va { color: #27aeae; } /* Variable */
+    code span.vs { color: #da4453; } /* VerbatimString */
+    code span.wa { color: #da4453; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://cdr2.com/pandoc.css" />
+</head>
+<body>
+<h1 id="admin-dashboard-setup-guide">Admin Dashboard Setup Guide</h1>
+<p>Quick guide to get the SpyNet admin dashboard up and running.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Node.js 22+ installed</li>
+<li>PostgreSQL running (for admin user storage)</li>
+<li>Main SpyNet API (optional, for live data)</li>
+</ul>
+<h2 id="quick-start-5-minutes">Quick Start (5 minutes)</h2>
+<h3 id="configure-environment">1. Configure Environment</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># From project root</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env</span></code></pre></div>
+<p>Edit <code>.env</code> and set admin credentials:</p>
+<pre class="env"><code># Admin Dashboard
+ADMIN_PORT=3001
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your-secure-password-here
+API_URL=http://localhost:3000</code></pre>
+<h3 id="install-dependencies">2. Install Dependencies</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> apps/admin</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> install</span></code></pre></div>
+<h3 id="set-up-admin-database-optional">3. Set Up Admin Database
+(Optional)</h3>
+<p>For production, set up admin user database:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-U</span> spynet <span class="at">-d</span> spynet <span class="at">-f</span> ../../scripts/db/admin-schema.sql</span></code></pre></div>
+<p>This creates: - <code>admin_users</code> - Admin accounts -
+<code>admin_sessions</code> - Session management -
+<code>admin_audit_log</code> - Audit trail -
+<code>admin_permissions</code> - Fine-grained permissions</p>
+<p>Default admin user: - Username: <code>admin</code> - Password:
+<code>changeme</code> - Role: <code>super_admin</code></p>
+<p><strong>⚠️ IMPORTANT: Change the default password
+immediately!</strong></p>
+<h3 id="start-the-dashboard">4. Start the Dashboard</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> run dev</span></code></pre></div>
+<p>Dashboard will be available at:
+<code>http://localhost:3001</code></p>
+<h3 id="login">5. Login</h3>
+<p>Navigate to <code>http://localhost:3001</code> and login with: -
+Username: <code>admin</code> (or your configured username) - Password:
+Your configured password</p>
+<h2 id="features">Features</h2>
+<h3 id="current-pages">Current Pages</h3>
+<ol type="1">
+<li><strong>📊 Overview</strong> - Dashboard with stats and system
+status</li>
+<li><strong>👥 Players</strong> - User management, search, filter,
+suspend/ban</li>
+<li><strong>⚔️ Factions</strong> - Faction stats and configuration</li>
+<li><strong>🗺️ Zones</strong> - Territory control management</li>
+<li><strong>🎯 Missions</strong> - Mission oversight and creation</li>
+<li><strong>📱 QR Codes</strong> - QR code generation and tracking</li>
+<li><strong>⚙️ Settings</strong> - System configuration</li>
+</ol>
+<h3 id="data-status">Data Status</h3>
+<p><strong>Current</strong>: Using mock data for demonstration
+<strong>Next Step</strong>: Connect to real API endpoints</p>
+<h2 id="connecting-to-real-api">Connecting to Real API</h2>
+<p>The admin dashboard is ready to connect to your NestJS API. The
+client is configured to proxy requests through the admin server to your
+main API.</p>
+<h3 id="api-endpoints-needed">API Endpoints Needed</h3>
+<p>See <code>apps/admin/README.md</code> for full list of required
+endpoints.</p>
+<p>Key endpoints: - <code>GET /v1/stats</code> - Dashboard statistics -
+<code>GET /v1/players</code> - List players -
+<code>GET /v1/factions</code> - List factions -
+<code>GET /v1/zones</code> - List zones - <code>GET /v1/missions</code>
+- List missions</p>
+<h3 id="updating-pages">Updating Pages</h3>
+<p>To use real data instead of mocks, update the fetch methods in each
+page:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Before (mock)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="fu">fetchPlayers</span>() {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> [<span class="co">/* mock data */</span>]<span class="op">;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">// After (real API)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> { api } <span class="im">from</span> <span class="st">&#39;../api.js&#39;</span><span class="op">;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="fu">fetchPlayers</span>() {</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> {</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cf">await</span> api<span class="op">.</span><span class="fu">getPlayers</span>()<span class="op">;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">catch</span> (error) {</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    ui<span class="op">.</span><span class="fu">showToast</span>(<span class="st">&#39;Failed to load players&#39;</span><span class="op">,</span> <span class="st">&#39;error&#39;</span>)<span class="op">;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> []<span class="op">;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h2 id="architecture">Architecture</h2>
+<h3 id="simple-lightweight">Simple &amp; Lightweight</h3>
+<ul>
+<li><strong>No React, No Frameworks</strong>: Pure vanilla
+JavaScript</li>
+<li><strong>No Build Step</strong>: Runs directly in browser</li>
+<li><strong>Minimal Dependencies</strong>: Only <code>dotenv</code> for
+server</li>
+<li><strong>Fast</strong>: ~10KB total JavaScript</li>
+</ul>
+<h3 id="how-it-works">How It Works</h3>
+<ol type="1">
+<li><strong>Server</strong> (<code>server/index.js</code>):
+<ul>
+<li>Serves static files</li>
+<li>Handles authentication</li>
+<li>Proxies API requests</li>
+</ul></li>
+<li><strong>Client</strong> (vanilla JS modules):
+<ul>
+<li><code>app.js</code> - Main app</li>
+<li><code>auth.js</code> - Authentication</li>
+<li><code>router.js</code> - Page routing</li>
+<li><code>api.js</code> - API client</li>
+<li><code>ui.js</code> - UI utilities</li>
+<li><code>pages/*</code> - Individual pages</li>
+</ul></li>
+</ol>
+<h2 id="security">Security</h2>
+<h3 id="current-implementation">Current Implementation</h3>
+<p>✅ Session-based authentication ✅ HttpOnly cookies ✅ Password
+protection ✅ Simple access control</p>
+<h3 id="production-recommendations">Production Recommendations</h3>
+<p>Implement before going to production:</p>
+<ol type="1">
+<li><strong>HTTPS</strong>: Enable TLS encryption</li>
+<li><strong>Password Hashing</strong>: Use bcrypt (see
+admin-schema.sql)</li>
+<li><strong>Redis Sessions</strong>: Replace in-memory sessions</li>
+<li><strong>CSRF Protection</strong>: Add CSRF tokens</li>
+<li><strong>Rate Limiting</strong>: Prevent brute force</li>
+<li><strong>Audit Logging</strong>: Track all admin actions</li>
+<li><strong>2FA</strong>: Add two-factor authentication</li>
+<li><strong>IP Whitelist</strong>: Restrict admin access by IP</li>
+</ol>
+<h3 id="changing-admin-password">Changing Admin Password</h3>
+<h4 id="method-1-environment-variable-development">Method 1: Environment
+Variable (Development)</h4>
+<p>Edit <code>.env</code>:</p>
+<pre class="env"><code>ADMIN_PASSWORD=new-secure-password</code></pre>
+<p>Restart server.</p>
+<h4 id="method-2-database-production">Method 2: Database
+(Production)</h4>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Generate bcrypt hash for your password</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- (use bcrypt library in Node.js or online tool)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> admin_users</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> password_hash <span class="op">=</span> <span class="st">&#39;$2b$10$YOUR_BCRYPT_HASH_HERE&#39;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> username <span class="op">=</span> <span class="st">&#39;admin&#39;</span>;</span></code></pre></div>
+<h2 id="customization">Customization</h2>
+<h3 id="changing-theme">Changing Theme</h3>
+<p>Edit <code>public/css/main.css</code>:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode css"><code class="sourceCode css"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="in">:root</span> {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">--color-primary</span>: #your-color<span class="op">;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">--color-bg</span>: #your-bg-color<span class="op">;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* ...more variables */</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="adding-admin-users">Adding Admin Users</h3>
+<p>In production with database:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> admin_users (username, password_hash, email, <span class="kw">role</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;newadmin&#39;</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;$2b$10$...&#39;</span>, <span class="co">-- bcrypt hash</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;newadmin@example.com&#39;</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;admin&#39;</span> <span class="co">-- or &#39;moderator&#39;, &#39;viewer&#39;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<h3 id="admin-roles">Admin Roles</h3>
+<ul>
+<li><strong>super_admin</strong>: Full access, can manage other
+admins</li>
+<li><strong>admin</strong>: Manage game content and players</li>
+<li><strong>moderator</strong>: View and moderate content, limited
+edits</li>
+<li><strong>viewer</strong>: Read-only access</li>
+</ul>
+<h2 id="development">Development</h2>
+<h3 id="file-structure">File Structure</h3>
+<pre><code>apps/admin/
+├── server/index.js       # HTTP server
+├── public/
+│   ├── index.html        # Main page
+│   ├── css/main.css      # Styles
+│   └── js/
+│       ├── app.js        # App entry
+│       ├── auth.js       # Auth module
+│       ├── api.js        # API client
+│       ├── ui.js         # UI utilities
+│       ├── router.js     # Routing
+│       └── pages/        # Page modules
+└── package.json</code></pre>
+<h3 id="adding-a-new-page">Adding a New Page</h3>
+<ol type="1">
+<li>Create <code>public/js/pages/your-page.js</code></li>
+<li>Export page object with <code>render()</code> and
+<code>init()</code></li>
+<li>Add to <code>public/js/pages/index.js</code></li>
+<li>Add nav link in <code>public/index.html</code></li>
+</ol>
+<p>See <code>apps/admin/README.md</code> for detailed instructions.</p>
+<h2 id="deployment">Deployment</h2>
+<h3 id="development-1">Development</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> apps/admin</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> run dev</span></code></pre></div>
+<h3 id="production">Production</h3>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="va">NODE_ENV</span><span class="op">=</span>production <span class="ex">pnpm</span> start</span></code></pre></div>
+<h3 id="docker">Docker</h3>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> node:22-alpine</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WORKDIR</span> /app</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> apps/admin/package*.json ./</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">npm</span> install <span class="at">--production</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> apps/admin/ ./</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPOSE</span> 3001</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">&quot;node&quot;</span>, <span class="st">&quot;server/index.js&quot;</span>]</span></code></pre></div>
+<h3 id="environment-variables">Environment Variables</h3>
+<p>Required: - <code>ADMIN_USERNAME</code> - Admin username -
+<code>ADMIN_PASSWORD</code> - Admin password - <code>API_URL</code> -
+Main API endpoint</p>
+<p>Optional: - <code>ADMIN_PORT</code> - Port (default: 3001) -
+<code>NODE_ENV</code> - Environment (development/production)</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="cant-login">Can’t Login</h3>
+<p><strong>Issue</strong>: Invalid credentials</p>
+<p><strong>Solution</strong>: 1. Check <code>.env</code> file in project
+root 2. Verify <code>ADMIN_USERNAME</code> and
+<code>ADMIN_PASSWORD</code> 3. Restart admin server after changing
+<code>.env</code></p>
+<h3 id="api-requests-fail">API Requests Fail</h3>
+<p><strong>Issue</strong>: 401/500 errors on API calls</p>
+<p><strong>Solution</strong>: 1. Verify <code>API_URL</code> in
+<code>.env</code> 2. Ensure main API server is running 3. Check browser
+DevTools Network tab 4. Verify API endpoints exist</p>
+<h3 id="port-already-in-use">Port Already in Use</h3>
+<p><strong>Issue</strong>: Port 3001 is already taken</p>
+<p><strong>Solution</strong>: Change port in <code>.env</code>:</p>
+<pre class="env"><code>ADMIN_PORT=3002</code></pre>
+<h3 id="sessions-not-persisting">Sessions Not Persisting</h3>
+<p><strong>Issue</strong>: Logged out after refresh</p>
+<p><strong>Solution</strong>: - Current implementation uses in-memory
+sessions - For production, implement Redis session store - See
+“Production Recommendations” above</p>
+<h2 id="next-steps">Next Steps</h2>
+<ol type="1">
+<li>✅ Get admin dashboard running</li>
+<li>⬜ Change default admin password</li>
+<li>⬜ Implement API endpoints in NestJS</li>
+<li>⬜ Connect pages to real API</li>
+<li>⬜ Set up admin database schema</li>
+<li>⬜ Implement proper authentication</li>
+<li>⬜ Add audit logging</li>
+<li>⬜ Deploy to production</li>
+</ol>
+<h2 id="support">Support</h2>
+<ul>
+<li><strong>Documentation</strong>:
+<code>apps/admin/README.md</code></li>
+<li><strong>API Reference</strong>: Check <code>public/js/api.js</code>
+for endpoint list</li>
+<li><strong>Issues</strong>: GitHub Issues</li>
+</ul>
+<h2 id="resources">Resources</h2>
+<ul>
+<li><a href="../apps/admin/README.md">Admin Dashboard README</a></li>
+<li><a href="../scripts/db/admin-schema.sql">Database Schema</a></li>
+<li><a href="../docs/">Main Project Docs</a></li>
+</ul>
+<hr />
+<p><strong>Remember</strong>: The default password is
+<code>changeme</code> - change it immediately!</p>
+</body>
+</html>

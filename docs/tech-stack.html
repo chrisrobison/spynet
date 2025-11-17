@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>tech-stack</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #232629;
+        color: #7a7c7d;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #7a7c7d;  padding-left: 4px; }
+    div.sourceCode
+      { color: #cfcfc2; background-color: #232629; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #cfcfc2; } /* Normal */
+    code span.al { color: #95da4c; background-color: #4d1f24; font-weight: bold; } /* Alert */
+    code span.an { color: #3f8058; } /* Annotation */
+    code span.at { color: #2980b9; } /* Attribute */
+    code span.bn { color: #f67400; } /* BaseN */
+    code span.bu { color: #7f8c8d; } /* BuiltIn */
+    code span.cf { color: #fdbc4b; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #3daee9; } /* Char */
+    code span.cn { color: #27aeae; font-weight: bold; } /* Constant */
+    code span.co { color: #7a7c7d; } /* Comment */
+    code span.cv { color: #7f8c8d; } /* CommentVar */
+    code span.do { color: #a43340; } /* Documentation */
+    code span.dt { color: #2980b9; } /* DataType */
+    code span.dv { color: #f67400; } /* DecVal */
+    code span.er { color: #da4453; text-decoration: underline; } /* Error */
+    code span.ex { color: #0099ff; font-weight: bold; } /* Extension */
+    code span.fl { color: #f67400; } /* Float */
+    code span.fu { color: #8e44ad; } /* Function */
+    code span.im { color: #27ae60; } /* Import */
+    code span.in { color: #c45b00; } /* Information */
+    code span.kw { color: #cfcfc2; font-weight: bold; } /* Keyword */
+    code span.op { color: #cfcfc2; } /* Operator */
+    code span.ot { color: #27ae60; } /* Other */
+    code span.pp { color: #27ae60; } /* Preprocessor */
+    code span.re { color: #2980b9; background-color: #153042; } /* RegionMarker */
+    code span.sc { color: #3daee9; } /* SpecialChar */
+    code span.ss { color: #da4453; } /* SpecialString */
+    code span.st { color: #f44f4f; } /* String */
+    code span.va { color: #27aeae; } /* Variable */
+    code span.vs { color: #da4453; } /* VerbatimString */
+    code span.wa { color: #da4453; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://cdr2.com/pandoc.css" />
+</head>
+<body>
+<h1 id="spynet-ar-tech-stack-architecture-mvpv1">SpyNet AR – Tech Stack
+&amp; Architecture (MVP→V1)</h1>
+<p>This is an actionable, opinionated stack for building the first
+playable in San Francisco and scaling to multi-city. Choices bias toward
+fast iteration, battle-tested infrastructure, and low unit cost.</p>
+<h2 id="product-scope-mvp">0. Product Scope (MVP)</h2>
+<ul>
+<li>WebAR client with camera overlay, item discovery, and nearby-agent
+scan</li>
+<li>QR mission flow (scan → validate → reward → narrative payload)</li>
+<li>Faction + control zones (read-only in MVP; capture in V1)</li>
+<li>Remote operations (cipher/puzzle missions) and basic LLM director
+issuing missions</li>
+<li>BLE proximity ping + privacy-preserving presence</li>
+</ul>
+<h2 id="client-stack">1. Client Stack</h2>
+<h3 id="primary-react-native-iosandroid">Primary: React Native
+(iOS/Android)</h3>
+<ul>
+<li><strong>Framework</strong>: React Native with Expo + native
+modules</li>
+<li><strong>AR</strong>: <code>react-native-vision-camera</code> + WebXR
+bridge or ViroReact (fallback)
+<ul>
+<li>Native ARKit/ARCore bridges in V1 for performance</li>
+</ul></li>
+<li><strong>BLE</strong>: <code>react-native-ble-plx</code> for
+scanning/advertising ephemeral service UUIDs</li>
+<li><strong>QR</strong>: <code>react-native-vision-camera</code> barcode
+plugin; fallback to ZXing on Android</li>
+<li><strong>Map</strong>: Mapbox SDK (offline tiles optional later)</li>
+<li><strong>State</strong>: Zustand for light global store; React Query
+for server sync</li>
+<li><strong>Auth</strong>: Sign in with Apple/Google + email-magic;
+device-bound key pair</li>
+<li><strong>Config/Feature Flags</strong>:
+<code>react-native-config</code> + remote flags from Config Service</li>
+</ul>
+<h3 id="secondary-web-companion">Secondary: Web Companion</h3>
+<ul>
+<li><strong>Framework</strong>: Next.js 15 + WebXR</li>
+<li><strong>Purpose</strong>: Browser demos, dashboards, and puzzle
+missions</li>
+</ul>
+<h2 id="backend-runtime">2. Backend &amp; Runtime</h2>
+<h3 id="api-gateway">API Gateway</h3>
+<ul>
+<li><strong>Server</strong>: Fastify (Node 22) with TypeScript, Zod
+validation, rate limiting</li>
+<li><strong>Alternative</strong>: uWebSockets.js behind Nginx for
+high-qps endpoints</li>
+</ul>
+<h3 id="missionstate-services">Mission/State Services</h3>
+<ul>
+<li><strong>Framework</strong>: NestJS (TypeScript) microservices</li>
+<li><strong>Services by bounded context</strong>:
+<ul>
+<li>Auth</li>
+<li>Players</li>
+<li>Missions</li>
+<li>Factions</li>
+<li>Zones</li>
+<li>Proximity</li>
+<li>QR</li>
+<li>Inventory</li>
+<li>Events</li>
+</ul></li>
+</ul>
+<h3 id="realtime">Realtime</h3>
+<ul>
+<li><strong>Protocol</strong>: WebSocket over Socket.IO 4 or native
+<code>ws</code></li>
+<li><strong>Organization</strong>: Rooms keyed by zone/faction</li>
+</ul>
+<h3 id="llm-orchestrator">LLM Orchestrator</h3>
+<ul>
+<li><strong>Framework</strong>: Python (FastAPI) tools-first agent
+service</li>
+<li><strong>LLM</strong>: OpenAI-compatible endpoint (switchable to
+local)</li>
+<li><strong>Integration</strong>: Tool functions exposed over
+gRPC/HTTP</li>
+</ul>
+<h3 id="workers">Workers</h3>
+<ul>
+<li><strong>Queue</strong>: BullMQ (Redis)</li>
+<li><strong>Workflows</strong>: Temporal (V1) for long-running mission
+workflows (expirations, retries, hedging)</li>
+</ul>
+<h3 id="databases">Databases</h3>
+<h4 id="postgresql-16-primary">PostgreSQL 16 (Primary)</h4>
+<ul>
+<li><strong>Purpose</strong>: Players, missions, items, QR, factions,
+zones, audit</li>
+<li><strong>Extensions</strong>: PostGIS for geospatial queries</li>
+</ul>
+<h4 id="redis-7">Redis 7</h4>
+<ul>
+<li><strong>Purpose</strong>: Presence, control meters, rate limits,
+ephemeral tokens</li>
+<li><strong>Data structures</strong>: Sets, sorted sets, TTL keys</li>
+</ul>
+<h4 id="s3-compatible-object-store">S3-Compatible Object Store</h4>
+<ul>
+<li><strong>Purpose</strong>: Mission media, signed payload
+archives</li>
+</ul>
+<h4 id="clickhouse">ClickHouse</h4>
+<ul>
+<li><strong>Purpose</strong>: Event analytics, player behavior
+analysis</li>
+</ul>
+<h3 id="infrastructure">Infrastructure</h3>
+<ul>
+<li><strong>Container Orchestration</strong>: Kubernetes (GKE
+Autopilot)</li>
+<li><strong>Managed Services</strong>: Cloud SQL (Postgres) +
+MemoryStore (Redis)</li>
+<li><strong>IaC</strong>: Terraform + Terragrunt</li>
+<li><strong>CDN/WAF</strong>: Cloudflare for CDN/WAF/Workers (edge token
+checks)</li>
+</ul>
+<h2 id="data-model-core-tables">3. Data Model (Core Tables)</h2>
+<h3 id="players">Players</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> players (</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> UUID <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  handle TEXT <span class="kw">UNIQUE</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  auth_user_id TEXT <span class="kw">UNIQUE</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  public_key BYTEA <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  faction_id UUID <span class="kw">NULL</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rank</span> <span class="dt">SMALLINT</span> <span class="kw">DEFAULT</span> <span class="dv">0</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  created_at TIMESTAMPTZ <span class="kw">DEFAULT</span> now()</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<h3 id="factions">Factions</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> factions (</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> UUID <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  code TEXT <span class="kw">UNIQUE</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  name TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  lore JSONB <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">DEFAULT</span> <span class="st">&#39;{}&#39;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<h3 id="zones-geofenced-control-areas">Zones (Geofenced Control
+Areas)</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> zones (</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> UUID <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  name TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  city TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  polygon GEOGRAPHY(POLYGON, <span class="dv">4326</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  control_faction_id UUID <span class="kw">NULL</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  control_score JSONB <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">DEFAULT</span> <span class="st">&#39;{&quot;obsidian&quot;:0,&quot;aurora&quot;:0,&quot;citadel&quot;:0}&#39;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  updated_at TIMESTAMPTZ <span class="kw">DEFAULT</span> now()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> zones_polygon_idx <span class="kw">ON</span> zones <span class="kw">USING</span> GIST(polygon);</span></code></pre></div>
+<h3 id="missions">Missions</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> missions (</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> UUID <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  kind TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>, <span class="co">-- qr_scan|surveillance|cipher|raid|drop|remote_analysis</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  payload JSONB <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  zone_id UUID <span class="kw">NULL</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  issuer TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>, <span class="co">-- ai|system|player</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  expires_at TIMESTAMPTZ <span class="kw">NULL</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  created_at TIMESTAMPTZ <span class="kw">DEFAULT</span> now()</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<h3 id="mission-assignments">Mission Assignments</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> mission_assignments (</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  mission_id UUID <span class="kw">REFERENCES</span> missions(<span class="kw">id</span>),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  player_id UUID <span class="kw">REFERENCES</span> players(<span class="kw">id</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  status TEXT <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">DEFAULT</span> <span class="st">&#39;assigned&#39;</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- assigned|in_progress|succeeded|failed|expired</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  progress JSONB <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">DEFAULT</span> <span class="st">&#39;{}&#39;</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">PRIMARY</span> <span class="kw">KEY</span> (mission_id, player_id)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<h3 id="qr-codes">QR Codes</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> qr_codes (</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> UUID <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  code TEXT <span class="kw">UNIQUE</span> <span class="kw">NOT</span> <span class="kw">NULL</span>, <span class="co">-- base32/qr string id</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  signed_jwt TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  zone_id UUID <span class="kw">NULL</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  creator_player_id UUID <span class="kw">NULL</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  active <span class="dt">BOOLEAN</span> <span class="kw">DEFAULT</span> <span class="kw">TRUE</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  expires_at TIMESTAMPTZ <span class="kw">NULL</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<h3 id="events-append-only-analytics">Events (Append-Only
+Analytics)</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="kw">events</span> (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> BIGSERIAL <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  event_type TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  player_id UUID <span class="kw">NULL</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  zone_id UUID <span class="kw">NULL</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  payload JSONB <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">timestamp</span> TIMESTAMPTZ <span class="kw">DEFAULT</span> now()</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">-- Note: Consider migrating this to ClickHouse for better analytics performance</span></span></code></pre></div>
+<h3 id="redis-keys-examples">Redis Keys (Examples)</h3>
+<pre><code>presence:&lt;zoneId&gt;          → set of ephemeral player ids
+ble:token:&lt;playerId&gt;       → rolling beacon token (ttl 120s)
+zone:meter:&lt;zoneId&gt;        → {obsidian: int, aurora: int, citadel: int}
+qr:rate:&lt;playerId&gt;         → sliding window for rate limiting</code></pre>
+<h2 id="security-anti-cheat-privacy">4. Security, Anti-Cheat,
+Privacy</h2>
+<h3 id="device-keys">Device Keys</h3>
+<ul>
+<li>Generate device ECC key pair</li>
+<li>Server issues device-bound session (DPoP-style proof-of-possession)
+for sensitive calls</li>
+</ul>
+<h3 id="location-attestation">Location Attestation</h3>
+<ul>
+<li>Require both GPS + Wi-Fi SSID fingerprints (hashed locally) for
+high-stakes actions</li>
+<li>Optional Android SafetyNet/Play Integrity + iOS DeviceCheck</li>
+</ul>
+<h3 id="ble-privacy">BLE Privacy</h3>
+<ul>
+<li>Ephemeral rotating beacon identifiers (EIDs) derived from
+<code>HMAC(device_secret, epoch)</code></li>
+<li>Never broadcast PII</li>
+</ul>
+<h3 id="qr-integrity">QR Integrity</h3>
+<ul>
+<li>Signed JWT payloads (ES256) with nonce, zone, mission, issuer,
+exp</li>
+<li>Server replays blocked by Redis bloom filter</li>
+</ul>
+<h3 id="transport">Transport</h3>
+<ul>
+<li>mTLS between services</li>
+<li>TLS 1.3 to clients</li>
+<li>All JWTs short-lived (15m) + refresh with rotating key set
+(JWKS)</li>
+</ul>
+<h3 id="abusedetection">Abuse/Detection</h3>
+<ul>
+<li>Anomaly rules in ClickHouse (speed hacks, impossible zone hops, scan
+bursts)</li>
+<li>Shadow-ban pipeline and challenge missions (e.g., camera AR
+verification) for flagged accounts</li>
+</ul>
+<h3 id="privacy">Privacy</h3>
+<ul>
+<li>Differential privacy for public leaderboards</li>
+<li>Coarse location (100-300m) outside live missions</li>
+<li>Data retention policy by event type</li>
+</ul>
+<h2 id="proximity-control-zones">5. Proximity &amp; Control Zones</h2>
+<h3 id="ble-presence">BLE Presence</h3>
+<p><strong>Advertise</strong>: - Ephemeral 16-byte service data
+<code>(eph_id, ts)</code> - Rotate every 60s</p>
+<p><strong>Scan</strong>: - Collect nearby <code>eph_ids</code> - Send
+hashed batch to Proximity Service - Server resolves to player ids for
+mutual consented encounters</p>
+<h3 id="control-meter-update-rule">Control Meter Update Rule</h3>
+<p>Per zone, every 30s:</p>
+<pre><code>score_delta = w_agents * agents_present +
+              w_missions * missions_completed +
+              w_qr * qr_scans +
+              w_pvp * encounter_outcomes +
+              w_remote * remote_ops</code></pre>
+<p>Weights tuned by season; stored in Config Service.</p>
+<h3 id="capture-rule">Capture Rule</h3>
+<p>Maintain leading score &gt; threshold for <code>capture_window</code>
+(e.g., 24h) → set <code>control_faction_id</code> and emit narrative
+event.</p>
+<h2 id="qr-payload-spec">6. QR Payload Spec</h2>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;qr_id&quot;</span><span class="fu">:</span> <span class="st">&quot;Q7MX93&quot;</span><span class="fu">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;zone&quot;</span><span class="fu">:</span> <span class="st">&quot;mission-dolores&quot;</span><span class="fu">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;mission&quot;</span><span class="fu">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;mission_id&quot;</span><span class="fu">:</span> <span class="st">&quot;3f7f...&quot;</span><span class="fu">,</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;issuer&quot;</span><span class="fu">:</span> <span class="st">&quot;ai&quot;</span><span class="fu">,</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;nonce&quot;</span><span class="fu">:</span> <span class="st">&quot;b64-16&quot;</span><span class="fu">,</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;exp&quot;</span><span class="fu">:</span> <span class="dv">1730947200</span><span class="fu">,</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;sig&quot;</span><span class="fu">:</span> <span class="st">&quot;(JWT ES256 over header.payload)&quot;</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="verification-flow">Verification Flow</h3>
+<ol type="1">
+<li>Check JWT signature</li>
+<li>Verify nonce not seen (Redis bloom filter)</li>
+<li>Validate zone policy</li>
+<li>Execute mission state mutation</li>
+</ol>
+<h2 id="api-selected-endpoints">7. API (Selected Endpoints)</h2>
+<pre><code>POST /v1/auth/magic/start        { email }
+POST /v1/auth/magic/verify       { token } → { access_token, refresh_token }
+GET  /v1/player/me               → profile, inventory, dossier
+POST /v1/presence/beacon         { eph_ids:[] } → { nearby:[{player_id, strength}], missions:[] }
+GET  /v1/zones/near?lat&amp;lon      → zones + control meters
+POST /v1/qr/scan                 { qr_id, jwt, lat, lon, wifi_hash } → mission result
+POST /v1/missions/accept         { mission_id }
+POST /v1/missions/progress       { mission_id, patch }
+POST /v1/missions/complete       { mission_id }
+GET  /v1/factions/state          → global + city snapshot</code></pre>
+<p>All responses signed with response MAC header for tamper evidence
+(optional).</p>
+<h2 id="llm-orchestrator-agents-tools">8. LLM Orchestrator (Agents &amp;
+Tools)</h2>
+<h3 id="runtime">Runtime</h3>
+<ul>
+<li><strong>Framework</strong>: FastAPI + LangGraph/TaskWeaver-style
+tool graph</li>
+</ul>
+<h3 id="core-tools">Core Tools</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>get_player_context(player_id) → skill profile, recent actions</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>get_zone_snapshot(city<span class="op">|</span>zone) → control meters, heatmap</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>issue_mission(player_id, spec) → writes mission <span class="op">+</span> assignment</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>message_players(<span class="bu">list</span>, payload) → narrative briefs<span class="op">/</span>broadcasts</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>score_event(event) → updates weights <span class="cf">for</span> adaptive tuning</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>query_kb(query_text) → RAG retrieval <span class="im">from</span> game docs</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>simulate_player_action(sim_id, action) → sandbox only</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>create_agent(profile) <span class="op">/</span> schedule_agent(agent_id, plan) → spawner</span></code></pre></div>
+<h3 id="mission-spec-schema">Mission Spec Schema</h3>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;kind&quot;</span><span class="fu">:</span> <span class="st">&quot;cipher|qr_scan|surveillance|raid|drop|remote_analysis&quot;</span><span class="fu">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;difficulty&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;zone&quot;</span><span class="fu">:</span> <span class="st">&quot;mission-dolores&quot;</span><span class="fu">,</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;objectives&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;qr_scan&quot;</span><span class="fu">,</span> <span class="dt">&quot;qr_id&quot;</span><span class="fu">:</span> <span class="st">&quot;Q7MX93&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;time_window&quot;</span><span class="fu">,</span> <span class="dt">&quot;between&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;17:00&quot;</span><span class="ot">,</span><span class="st">&quot;20:00&quot;</span><span class="ot">,</span><span class="st">&quot;America/Los_Angeles&quot;</span><span class="ot">]</span> <span class="fu">}</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;rewards&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;xp&quot;</span><span class="fu">:</span> <span class="dv">120</span><span class="fu">,</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;credits&quot;</span><span class="fu">:</span> <span class="dv">30</span><span class="fu">,</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;faction&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;aurora&quot;</span><span class="fu">:</span> <span class="dv">10</span><span class="fu">}</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;expires_in&quot;</span><span class="fu">:</span> <span class="dv">14400</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="guardrails">Guardrails</h3>
+<ul>
+<li>JSON schema validation</li>
+<li>Policy sandbox (no unsafe content, no real-world trespass)</li>
+<li>Time-of-day constraints</li>
+<li>Safety zones blacklist</li>
+</ul>
+<h2 id="observability-ops">9. Observability &amp; Ops</h2>
+<h3 id="logging">Logging</h3>
+<ul>
+<li><strong>Stack</strong>: OpenTelemetry → Grafana Loki</li>
+</ul>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li><strong>Stack</strong>: Prometheus → Grafana dashboards</li>
+</ul>
+<h3 id="tracing">Tracing</h3>
+<ul>
+<li><strong>Stack</strong>: OTLP → Tempo</li>
+</ul>
+<h3 id="error-tracking">Error Tracking</h3>
+<ul>
+<li><strong>Tool</strong>: Sentry (client + server) for crash/error
+tracking</li>
+</ul>
+<h3 id="alerting">Alerting</h3>
+<ul>
+<li><strong>Tool</strong>: Grafana OnCall + Slack webhook</li>
+</ul>
+<h3 id="feature-flagsconfig">Feature Flags/Config</h3>
+<ul>
+<li><strong>Store</strong>: Config Service (Postgres) + CDN edge
+cache</li>
+<li><strong>Propagation</strong>: Changes emit to clients via
+WebSocket</li>
+</ul>
+<h2 id="cicd-environments">10. CI/CD &amp; Environments</h2>
+<h3 id="ci">CI</h3>
+<ul>
+<li><strong>Platform</strong>: GitHub Actions</li>
+<li><strong>Tests</strong>:
+<ul>
+<li>Typecheck</li>
+<li>Unit tests</li>
+<li>Integration tests (Testcontainers)</li>
+<li>Mobile E2E (Detox)</li>
+<li>Web E2E (Playwright)</li>
+</ul></li>
+</ul>
+<h3 id="cd">CD</h3>
+<ul>
+<li><strong>K8s</strong>: ArgoCD to GKE</li>
+<li><strong>Mobile</strong>: Fastlane/TestFlight + Internal App
+Sharing</li>
+</ul>
+<h3 id="environments">Environments</h3>
+<ul>
+<li><strong>dev</strong>: Ephemeral preview environments</li>
+<li><strong>staging</strong>: SF seed data</li>
+<li><strong>prod</strong>: Production</li>
+</ul>
+<h3 id="secrets-management">Secrets Management</h3>
+<ul>
+<li><strong>Tool</strong>: SOPS + GCP KMS</li>
+<li><strong>K8s</strong>: Sealed secrets in cluster</li>
+</ul>
+<h2 id="content-puzzle-pipeline">11. Content &amp; Puzzle Pipeline</h2>
+<ol type="1">
+<li>Author puzzles as JSON + media</li>
+<li>Validate via CLI: <code>spynet-puzzle lint</code></li>
+<li>Build stego/cipher bundles (PNG + hint JSON)</li>
+<li>Store on S3 with signed GET URLs</li>
+<li>Localization via ICU MessageFormat</li>
+<li>Optional: Crowdin/POEditor for community translations</li>
+</ol>
+<h2 id="monetization-hooks-v1">12. Monetization Hooks (V1+)</h2>
+<ul>
+<li><strong>Cosmetic Shop</strong>: Skins, scanner shaders, dossier
+frames</li>
+<li><strong>Agent Kits</strong>: Thermal QR printers + sticker rolls
+shipped; code claims via SKU QR</li>
+<li><strong>Season Pass</strong>: Access to elite missions, faction
+briefings, double-agent storylines</li>
+</ul>
+<h2 id="legalsafety">13. Legal/Safety</h2>
+<h3 id="mission-restrictions">Mission Restrictions</h3>
+<ul>
+<li>No missions requiring entry to paid/secure/private spaces</li>
+<li>Blacklist polygons (schools, hospitals, transit tracks)</li>
+<li>Curfew windows for minors</li>
+</ul>
+<h3 id="privacy-compliance">Privacy Compliance</h3>
+<ul>
+<li>GDPR/CCPA: Data export/delete functionality</li>
+<li>Privacy mode (no precise location outside active mission)</li>
+</ul>
+<h3 id="venue-partner-program">Venue Partner Program</h3>
+<ul>
+<li>Opt-in QR placement agreements with auto-expiry</li>
+<li>Business partnerships for legitimate placement</li>
+<li>Community reporting for inappropriate locations</li>
+</ul>
+<h2 id="roadmap">14. Roadmap</h2>
+<h3 id="milestone-a-4-6-weeks">Milestone A (4-6 weeks)</h3>
+<ul>
+<li>Auth, players, QR scan flow, inventory, basic missions (qr_scan,
+cipher)</li>
+<li>BLE presence prototype</li>
+<li>Zone read-only map</li>
+<li>WebAR overlay demo</li>
+</ul>
+<h3 id="milestone-b-6-10-weeks">Milestone B (6-10 weeks)</h3>
+<ul>
+<li>Control meters + capture rule</li>
+<li>Faction join</li>
+<li>LLM director issuing missions</li>
+<li>Anti-cheat v1 (attestation + anomaly)</li>
+<li>Analytics dashboards</li>
+</ul>
+<h3 id="milestone-c-10-14-weeks">Milestone C (10-14 weeks)</h3>
+<ul>
+<li>Double-agent mechanics</li>
+<li>City event ops</li>
+<li>Narrative broadcasts</li>
+<li>iOS/Android store prep</li>
+<li>SF pilot with 3-5 partner venues</li>
+</ul>
+<h2 id="developer-bootstrap">15. Developer Bootstrap</h2>
+<h3 id="backend">Backend</h3>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> i</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> <span class="at">-w</span> run dev:stack  <span class="co"># docker compose: postgres, redis, clickhouse, minio</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> <span class="at">-w</span> run dev:api</span></code></pre></div>
+<h3 id="orchestrator">Orchestrator</h3>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> venv <span class="kw">&amp;&amp;</span> <span class="ex">uv</span> pip install <span class="at">-r</span> requirements.txt</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run uvicorn orchestrator.app:app <span class="at">--reload</span></span></code></pre></div>
+<h3 id="mobile">Mobile</h3>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bun</span> i</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">bun</span> run start  <span class="co"># expo</span></span></code></pre></div>
+<h3 id="seed-data">Seed Data</h3>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> seed:sf  <span class="co"># zones (BART, Embarcadero, Mission Dolores), sample QR missions, three factions</span></span></code></pre></div>
+<h2 id="open-questions">16. Open Questions</h2>
+<ol type="1">
+<li><strong>WebAR vs Native AR</strong>: Lock on native for V1
+performance?</li>
+<li><strong>BLE Adjacencies</strong>: Add ultrasonic chirp fallback in
+crowded stations?</li>
+<li><strong>Player Safety Heuristics</strong>: Dynamic crowd detection
+to reduce on-screen prompts in congested areas?</li>
+<li><strong>Scaling</strong>: When to split services? Monolith →
+microservices transition plan?</li>
+<li><strong>Real-time Performance</strong>: WebSocket vs SSE vs long
+polling trade-offs?</li>
+</ol>
+</body>
+</html>
